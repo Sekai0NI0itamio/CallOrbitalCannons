@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 — footage-matched rings + loaded-edge targeting
+
+- Nuke redistributed 602 → 539 TNT (rings
+  `{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}` — lone center, dense
+  second ring, strictly thinning outward) on wider 7-block radii
+  `{6, 13, …, 69}` (was 5-block `{6, 11, …, 51}`); jitter and scatter
+  kept, footprint now ~140 blocks. Payload cap default 650 → 600.
+- Rod aims past the loaded edge now strike the last loaded voxel along
+  the look ray (Y clamped to world bounds) instead of fizzling; clean
+  misses inside loaded chunks still keep the rod. Stab chat notes the
+  approximation; the Orbital rod stays silent.
+- Stab drill unchanged (full column, ≥ 1200 stop); docs now spell out
+  that a resistant layer at the aim ends the column there.
+
 ## 1.1.2 — 70% payload trim
 
 - Nuke thinned 2000 → 602 TNT (rings `{14, …, 106}`, same proportions,

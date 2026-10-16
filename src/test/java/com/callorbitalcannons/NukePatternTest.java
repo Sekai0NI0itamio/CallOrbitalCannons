@@ -13,19 +13,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NukePatternTest {
     @Test
     void ringRadiiAreDocumentedBaseline() {
-        assertArrayEquals(new double[]{6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0},
+        assertArrayEquals(new double[]{6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0, 55.0, 62.0, 69.0},
                 NukePattern.RING_RADII, 1e-9);
     }
 
     @Test
-    void ringCountsGiveThinnedPayload() {
-        assertArrayEquals(new int[]{14, 24, 34, 44, 56, 66, 75, 86, 96, 106}, NukePattern.RING_COUNTS);
+    void ringGapsAreWideAndUniform() {
+        for (int i = 1; i < NukePattern.RING_RADII.length; i++) {
+            assertEquals(7.0, NukePattern.RING_RADII[i] - NukePattern.RING_RADII[i - 1], 1e-9);
+        }
     }
 
     @Test
-    void ringTotalsMatchSixHundredBaseline() {
-        assertEquals(601, NukePattern.ringTotal());
-        assertEquals(602, NukePattern.totalPayload());
+    void ringCountsGiveThinnedPayload() {
+        assertArrayEquals(new int[]{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}, NukePattern.RING_COUNTS);
+    }
+
+    @Test
+    void ringTotalsMatchFiveThirtyNineBaseline() {
+        assertEquals(538, NukePattern.ringTotal());
+        assertEquals(539, NukePattern.totalPayload());
+    }
+
+    @Test
+    void secondRingIsDensestThenDecreasingOutward() {
+        int[] counts = NukePattern.RING_COUNTS;
+        double[] radii = NukePattern.RING_RADII;
+        double secondSpacing = 2.0 * Math.PI * radii[1] / counts[1];
+        for (int i = 0; i < counts.length; i++) {
+            if (i == 1) {
+                continue;
+            }
+            double spacing = 2.0 * Math.PI * radii[i] / counts[i];
+            assertTrue(spacing > secondSpacing, "ring " + i + " should be sparser than ring 1");
+        }
+        for (int i = 2; i < counts.length; i++) {
+            assertTrue(counts[i] < counts[i - 1], "ring " + i + " should be sparser than ring " + (i - 1));
+        }
     }
 
     @Test

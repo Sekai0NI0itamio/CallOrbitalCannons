@@ -12,10 +12,13 @@ import java.util.List;
 
 /**
  * Stab Shot: the full vertical column at the target's x/z, swept top-down
- * from the world ceiling to the floor in groups of 5 overlapping-fuse TNT
- * charges every 4 blocks. Each charge has a 1-tick fuse and no gravity.
- * The drill stops after the first blast-resistant block, like the
- * reference stopping rule.
+ * from the world ceiling to the floor in groups of overlapping-fuse TNT
+ * charges (3 per group every 8 blocks by default; see config). Each charge
+ * has a 1-tick fuse and no gravity. The drill stops after spawning on the
+ * first blast-resistant block (resistance &ge; threshold), like the
+ * reference stopping rule — so a resistant surface (obsidian platform,
+ * Nether ceiling, bedrock floor) ends the drill there and nothing below
+ * that layer is hit.
  */
 public final class StabStrike {
     private StabStrike() {

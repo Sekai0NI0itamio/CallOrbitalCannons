@@ -13,7 +13,7 @@ public final class OrbitalConfigData {
     /** Zero disables the per-player recharge (rods are single-use anyway). */
     public long playerCooldownTicks = 0;
     public int maxActiveStrikes = 4;
-    public int nukePayloadLimit = 650;
+    public int nukePayloadLimit = 600;
     public int nukeRingCount = 10;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
@@ -40,7 +40,7 @@ public final class OrbitalConfigData {
         strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
         playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 0);
         maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
-        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 650);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 600);
         nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);

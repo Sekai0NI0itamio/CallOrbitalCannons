@@ -2,9 +2,9 @@
 
 ## Expected entity counts
 
-- Nuke (default config): 1 center + 601 ring charges = **602 TNT
+- Nuke (default config): 1 center + 538 ring charges = **539 TNT
   entities** spawned in one server tick, fuse 79 ticks (~4 s), all
-  exploding within a short window across a ~100-block-diameter footprint.
+  exploding within a short window across a ~140-block-diameter footprint.
 - Stab (default config): 3 charges per 8-block step across the full world
   height, top-down. A default world (-64..319) needs up to 48 steps, i.e.
   up to **144 TNT entities** with 1-tick fuses — fewer when the drill
@@ -12,7 +12,7 @@
 
 ## Main performance risks
 
-1. **669 near-simultaneous vanilla explosions**: each explosion runs the
+1. **539 near-simultaneous vanilla explosions**: each explosion runs the
    vanilla ~1,400-ray block-density calculation on the server thread, plus
    block updates, lighting updates, and entity damage scans.
 2. **Item-entity floods**: crater block drops become hundreds of item
@@ -29,8 +29,8 @@
 - `StrikeScheduler`: server-thread-only queue, configurable
   `strikeDelayTicks` (default 10), optional `playerCooldownTicks`
   (default 0 = off; rods are single-use), `maxActiveStrikes` (default 4),
-  duplicate suppression, and `nukePayloadLimit` (default 650, above the
-  602 baseline so the full pattern spawns uncapped by default).
+   duplicate suppression, and `nukePayloadLimit` (default 600, above the
+   539 baseline so the full pattern spawns uncapped by default).
 - Coordinate/dimension validation at schedule time and revalidation
   (loaded chunk, world height) at fire time; state pruned on world unload
   and cleared on server shutdown with log lines for every rejection.
@@ -43,7 +43,7 @@
 
 ## CI tests and benchmark methodology
 
-- `NukePatternTest` asserts the exact entity budget (601 + 1) and that
+- `NukePatternTest` asserts the exact entity budget (538 + 1) and that
   every placement lands inside its ring band, so footprint regressions
   fail the build.
 - `StabPatternTest` asserts the full bottom-to-top column coverage,
@@ -65,7 +65,7 @@ workflow run.
 ## Limitations of performance claims
 
 - "Safe by default" means *bounded and validated*, not *lag-free*: a full
-  602-TNT nuke or a 144-charge full-column stab on a weak server will
+  539-TNT nuke or a 144-charge full-column stab on a weak server will
   still spike the tick. Operators on shared hardware should lower
   `nukePayloadLimit`/`maxActiveStrikes`/`stabMaxSteps`.
 - `terrainDestruction` and `reduceBlockDrops` are parsed and validated but

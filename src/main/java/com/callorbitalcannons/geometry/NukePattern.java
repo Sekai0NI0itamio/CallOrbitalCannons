@@ -9,11 +9,13 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.1.2 behavior: a thinned ragged carpet — 602 charges over radii
- * 6..51 with per-charge angular jitter and wide scatter, so the footprint
- * reads as a torn bombardment zone rather than clean circles. Counts,
- * jitter, and scatter are all configurable; see docs/REFERENCE_RESEARCH.md
- * for provenance.
+ * <p>1.2.0 behavior, measured against Wemmbbu cannon footage (lone
+ * center charge, dense second ring, sparse outer rings, wide gaps between
+ * rings): a 539-charge pattern over radii 6..69 — one moderate inner ring,
+ * a dense second ring, then strictly decreasing counts outward, on uniform
+ * 7-block ring gaps so the bands stay visually separated. Per-charge
+ * angular jitter and wide scatter are kept. Counts, jitter, and scatter
+ * are all configurable; see docs/REFERENCE_RESEARCH.md for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -22,15 +24,16 @@ public final class NukePattern {
     private NukePattern() {
     }
 
-    /** Ring radii in blocks, innermost first. */
-    public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
+    /** Ring radii in blocks, innermost first (uniform 7-block gaps). */
+    public static final double[] RING_RADII = {6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0, 55.0, 62.0, 69.0};
 
     /**
-     * Charges per ring. Sums to 601 ring charges; plus the center charge
-     * each strike uses 602 TNT — the 2000-charge carpet thinned by 70%
-     * (same 10-ring proportions, in-game feedback 1.1.2).
+     * Charges per ring. Sums to 538 ring charges; plus the center charge
+     * each strike uses 539 TNT — a dense-inner / sparse-outer distribution:
+     * moderate inner ring, densest second ring, then strictly decreasing
+     * outward (footage-matched 1.2.0, replacing the backwards 1.1.2 growth).
      */
-    public static final int[] RING_COUNTS = {14, 24, 34, 44, 56, 66, 75, 86, 96, 106};
+    public static final int[] RING_COUNTS = {30, 102, 84, 68, 60, 52, 44, 38, 32, 28};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;

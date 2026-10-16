@@ -15,7 +15,7 @@ approximated, and where this mod differs.
 
 | Rod | Strike | Effect |
 |---|---|---|
-| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 602 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up in a ragged, jittered carpet across a ~100-block footprint. Fires silently in chat — only the warning sound plays |
+| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 539 TNT (lone center + 10 rings, radii 6–69, dense second ring fading to sparse outer rings on 7-block gaps) fall from 72 blocks up across a ~140-block footprint. Fires silently in chat — only the warning sound plays |
 | Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down in 3-TNT groups every 8 blocks with 1-tick fuses (up to 144 charges) — stops at the first blast-resistant block (≥ 1200) |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
@@ -55,9 +55,13 @@ All 64 TNT and the rod are consumed; exactly one weapon rod is produced.
 3. The rod breaks, a warning sounds, and the strike lands after a short
    delay (10 ticks by default).
 
-Misses (no targeted block) and full strike queues never consume the rod.
+Clean misses inside loaded chunks (and full strike queues) never
+consume the rod. Aims past the loaded edge fall back to the last loaded
+voxel along the look ray — the nearest block position to what was aimed
+at — and do consume the rod; the world bottom/top clamp the fallback Y,
+so deep worlds (down to -64 and below) work.
 The Orbital rod never prints chat messages; the Stab rod reports its
-target in chat as before.
+target in chat as before, noting edge-of-loaded-chunks approximations.
 
 ## Commands (operator level 2)
 
@@ -77,7 +81,7 @@ target in chat as before.
 | strikeDelayTicks | 10 | Launch delay after activation |
 | playerCooldownTicks | 0 | Per-player recharge, in ticks (0 = off; rods are single-use) |
 | maxActiveStrikes | 4 | Pending-strike queue cap |
-| nukePayloadLimit | 650 | TNT cap per nuke (602 = full pattern) |
+| nukePayloadLimit | 600 | TNT cap per nuke (539 = full pattern) |
 | nukeRingCount | 10 | Rings used (1–10, innermost first) |
 | nukeSpawnHeight | 72.0 | Drop height above target |
 | nukeFuseTicks | 79 | Nuke TNT fuse |
@@ -105,7 +109,7 @@ safe defaults are used; out-of-range values are reset with a log warning.
 
 ## Server requirements and performance
 
-A full nuke spawns 602 live TNT entities and a full stab column up to
+A full nuke spawns 539 live TNT entities and a full stab column up to
 144 — expect a serious but bounded tick spike. See
 `docs/PERFORMANCE.md` for budgets, safeguards, and tuning advice before
 handing these rods to your players. On shared hardware, consider lowering

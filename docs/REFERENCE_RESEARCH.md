@@ -134,7 +134,33 @@ above are arithmetic on those verbatim values
   and the Orbital rod is chat-silent: usability requests, not reference
   behavior.
 
-## 7. Unverifiable behavior (explicit approximations)
+## 7. 1.2.0 deviations (footage-matched rings + loaded-edge targeting)
+
+- **Nuke redistributed dense-inner / sparse-outer.** Frame review of
+  Wemmbbu cannon footage (top-down falling-TNT shot) shows a lone center
+  charge, a dense second ring, then strictly thinning outer rings with
+  wide visible gaps between rings — the 1.1.2 inner-to-outer growth ran
+  backwards against this. Ring counts are now
+  `{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}` (538 + center = 539) on
+  uniform 7-block radii `{6, 13, …, 69}` (was 5-block `{6, 11, …, 51}`),
+  so each band stays visually separated under the kept 2.0 scatter and
+  0.5 angular jitter. Per-ring charge counts remain an eyeballed
+  approximation of the footage, not a measured recreation; the payload
+  cap default tightens 650 → 600 (still above the 539 baseline).
+- **Rod targeting falls back to the loaded edge.** Vanilla raycast misses
+  past loaded chunks, so aims beyond the loaded edge now approximate the
+  last loaded voxel along the look ray (Y clamped to the live world
+  bottom/top, covering deep worlds at -64 and below) instead of fizzling.
+  A clean miss inside loaded territory still keeps the rod. This is new
+  behavior with no reference counterpart.
+- **Stab stop-rule note (no code change).** The drill still halts after
+  spawning on the first block with resistance ≥ 1200, exactly the
+  reference rule — so a resistant layer at the aim (obsidian test
+  platform, Nether ceiling, ancient debris) ends the column there and
+  nothing below is hit. Explosions "only above the aimed Y" with a full
+  column otherwise intact points at this rule firing, not at a sweep bug.
+
+## 8. Unverifiable behavior (explicit approximations)
 
 - Exact fidelity to the original redstone contraption (unverifiable).
 - WOC behavior beyond its public description (page unfetchable).

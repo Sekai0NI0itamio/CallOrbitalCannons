@@ -1,5 +1,10 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.0 (footage-matched rings + loaded-edge targeting)
+- [ ] Nuke 539 (rings {30,102,84,68,60,52,44,38,32,28}, radii 6..69 step 7, dense second ring, decreasing outward), cap 600; stab unchanged
+- [ ] Raycast miss past loaded edge approximates last loaded voxel (Y clamped); clean miss keeps rod; stab chat notes approximation
+- [ ] CI green on 1.2.0, JAR refreshed locally
+
 ## 1.1.2 (payload trim)
 - [x] Nuke 602 (rings {14..106}), cap 650; stab 144 (triplets every 8, cap 64)
 - [x] CI green on 1.1.2, JAR refreshed locally

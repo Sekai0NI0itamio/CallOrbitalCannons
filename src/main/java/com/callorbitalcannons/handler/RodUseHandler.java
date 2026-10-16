@@ -3,6 +3,7 @@ package com.callorbitalcannons.handler;
 import com.callorbitalcannons.config.OrbitalConfig;
 import com.callorbitalcannons.config.OrbitalConfigData;
 import com.callorbitalcannons.geometry.StrikeValidator;
+import com.callorbitalcannons.geometry.TargetRay;
 import com.callorbitalcannons.item.OrbitalRod;
 import com.callorbitalcannons.item.WeaponMode;
 import com.callorbitalcannons.strike.StrikeScheduler;
@@ -19,6 +20,9 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+
+import java.util.Optional;
 
 /**
  * Right-click targeting: validates the weapon, raycasts to the aimed block
@@ -52,12 +56,31 @@ public final class RodUseHandler {
         boolean silent = mode == WeaponMode.NUKE;
         OrbitalConfigData config = OrbitalConfig.get();
         HitResult hit = player.raycast(config.targetingRange, 1.0f, false);
-        if (hit.getType() != HitResult.Type.BLOCK) {
-            tell(player, silent, Text.literal("No target in range (" + (int) config.targetingRange + " blocks).")
-                    .formatted(Formatting.GRAY));
-            return TypedActionResult.fail(stack);
+        BlockPos target;
+        boolean approximate = false;
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            target = ((BlockHitResult) hit).getBlockPos();
+        } else {
+            // Exact raycast missed: the aim may extend past loaded chunks.
+            // Fall back to the last loaded voxel along the look ray — the
+            // nearest block position to what the player was aiming at.
+            // A clean miss inside loaded territory keeps the rod as before.
+            ServerWorld serverWorld = (ServerWorld) world;
+            Vec3d look = player.getRotationVec(1.0f);
+            Optional<TargetRay.Target> fallback = TargetRay.approximate(
+                    player.getX(), player.getEyeY(), player.getZ(),
+                    look.x, look.y, look.z, config.targetingRange,
+                    serverWorld.getBottomY(), serverWorld.getTopY() - 1,
+                    (x, y, z) -> serverWorld.isChunkLoaded(new BlockPos(x, y, z)));
+            if (fallback.isEmpty()) {
+                tell(player, silent, Text.literal("No target in range (" + (int) config.targetingRange + " blocks).")
+                        .formatted(Formatting.GRAY));
+                return TypedActionResult.fail(stack);
+            }
+            TargetRay.Target fallbackTarget = fallback.get();
+            target = new BlockPos(fallbackTarget.x(), fallbackTarget.y(), fallbackTarget.z());
+            approximate = true;
         }
-        BlockPos target = ((BlockHitResult) hit).getBlockPos();
         if (!StrikeValidator.withinRange(player.getX(), player.getEyeY(), player.getZ(),
                 target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, config.targetingRange + 1.0)) {
             tell(player, silent, Text.literal("Target out of range.").formatted(Formatting.GRAY));
@@ -71,9 +94,13 @@ public final class RodUseHandler {
                 serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.PLAYERS, 1.0f, 1.0f);
                 if (!silent) {
-                    player.sendMessage(Text.literal("Stab shot inbound at ")
+                    var message = Text.literal("Stab shot inbound at ")
                             .formatted(Formatting.GOLD)
-                            .append(Text.literal(target.toShortString()).formatted(Formatting.WHITE)), false);
+                            .append(Text.literal(target.toShortString()).formatted(Formatting.WHITE));
+                    if (approximate) {
+                        message.append(Text.literal(" (edge of loaded chunks)").formatted(Formatting.GRAY));
+                    }
+                    player.sendMessage(message, false);
                 }
                 breakRod(player, serverWorld, stack, config);
                 return TypedActionResult.consume(stack);
