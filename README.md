@@ -15,8 +15,8 @@ approximated, and where this mod differs.
 
 | Rod | Strike | Effect |
 |---|---|---|
-| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 2000 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up in a ragged, jittered carpet across a ~100-block footprint. Fires silently in chat — only the warning sound plays |
-| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down in 5-TNT groups every 4 blocks with 1-tick fuses — stops at the first blast-resistant block (≥ 1200) |
+| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 602 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up in a ragged, jittered carpet across a ~100-block footprint. Fires silently in chat — only the warning sound plays |
+| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down in 3-TNT groups every 8 blocks with 1-tick fuses (up to 144 charges) — stops at the first blast-resistant block (≥ 1200) |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
 forges a weapon. Rods carry a single durability point: the first survival
@@ -77,15 +77,15 @@ target in chat as before.
 | strikeDelayTicks | 10 | Launch delay after activation |
 | playerCooldownTicks | 0 | Per-player recharge, in ticks (0 = off; rods are single-use) |
 | maxActiveStrikes | 4 | Pending-strike queue cap |
-| nukePayloadLimit | 2000 | TNT cap per nuke (2000 = full pattern) |
+| nukePayloadLimit | 650 | TNT cap per nuke (602 = full pattern) |
 | nukeRingCount | 10 | Rings used (1–10, innermost first) |
 | nukeSpawnHeight | 72.0 | Drop height above target |
 | nukeFuseTicks | 79 | Nuke TNT fuse |
 | nukeMisalignRange | 2.0 | Per-charge scatter-disc radius |
 | nukeAngularJitter | 0.5 | Charge angle wander, fraction of one spacing (breaks clean circles) |
-| stabMaxSteps | 128 | Max stab column depth (steps; 96 covers a default world) |
-| stabTntPerStep | 5 | Charges per step |
-| stabStepSize | 4 | Blocks between groups |
+| stabMaxSteps | 64 | Max stab column depth (steps; 48 covers a default world) |
+| stabTntPerStep | 3 | Charges per step |
+| stabStepSize | 8 | Blocks between groups |
 | stabVerticalOffset | 0.75 | Charge spacing inside a group |
 | stabFuseTicks | 1 | Stab TNT fuse |
 | blastResistanceStop | 1200.0 | Resistance that stops the drill |
@@ -105,8 +105,8 @@ safe defaults are used; out-of-range values are reset with a log warning.
 
 ## Server requirements and performance
 
-A full nuke spawns 2000 live TNT entities and a full stab column up to
-480 — expect a serious but bounded tick spike. See
+A full nuke spawns 602 live TNT entities and a full stab column up to
+144 — expect a serious but bounded tick spike. See
 `docs/PERFORMANCE.md` for budgets, safeguards, and tuning advice before
 handing these rods to your players. On shared hardware, consider lowering
 `nukePayloadLimit`/`maxActiveStrikes`.

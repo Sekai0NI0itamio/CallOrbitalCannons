@@ -120,6 +120,10 @@ above are arithmetic on those verbatim values
   2000) with angular jitter (default 0.5 of one spacing) and a wider
   scatter disc (default 2.0). Exact Wemmbus dispenser mechanics remain
   unverified; this is a tuned approximation, not a measured recreation.
+  1.1.2 thinned the carpet a further 70% on player feedback (rings
+  `{14, …, 106}`, 601 + center = 602) while keeping the same proportions,
+  jitter, and scatter; stab triplets every 8 blocks likewise cut its
+  column 480 → 144.
 - **Stab now spans the full world height.** Per player request the drill
   takes only the target's x/z and sweeps top-down from the world ceiling
   instead of clustering around the clicked Y — but the blast-resistance

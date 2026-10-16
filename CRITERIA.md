@@ -1,6 +1,10 @@
 # Criteria: CallOrbitalCannons
 
-## 1.1.0 (in-game feedback)
+## 1.1.2 (payload trim)
+- [ ] Nuke 602 (rings {14..106}), cap 650; stab 144 (triplets every 8, cap 64)
+- [ ] CI green on 1.1.2, JAR refreshed locally
+
+## 1.1.1 (all verified green on CI run 38907271451)
 - [x] Nuke: 2000 payload, ring counts {45..352}, jitter + scatter defaults, ragged carpet
 - [x] Stab: full-height column at x/z swept top-down, blast-resistance stop kept
 - [x] Rods spawn at 1 durability and break on first survival use

@@ -5,8 +5,8 @@ import java.util.List;
 
 /**
  * Stab Shot geometry: a full-height vertical column at the target's x/z,
- * swept from the world bottom to the top in 4-block steps with 5 TNT per
- * step at slight vertical offsets so neighbouring blast radii overlap.
+ * swept from the world top down in 8-block steps with 3 TNT per step at
+ * slight vertical offsets so neighbouring blast radii overlap.
  * Each charge uses a 1-tick fuse and no gravity, so the whole column
  * detonates near-simultaneously from the bottom up.
  *
@@ -24,10 +24,10 @@ public final class StabPattern {
     }
 
     /** Downward step between charge groups. */
-    public static final int STEP_SIZE = 4;
+    public static final int STEP_SIZE = 8;
 
     /** TNT charges spawned per step. */
-    public static final int TNT_PER_STEP = 5;
+    public static final int TNT_PER_STEP = 3;
 
     /** Vertical spacing between charges inside one step group. */
     public static final double VERTICAL_OFFSET = 0.75;

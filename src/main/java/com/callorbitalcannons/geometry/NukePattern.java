@@ -9,11 +9,11 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.1.0 behavior: a Wemmbus-scale ragged carpet — 2000 charges over
- * radii 6..51 with per-charge angular jitter and wide scatter, so the
- * footprint reads as a torn bombardment zone rather than clean circles.
- * Counts, jitter, and scatter are all configurable; see
- * docs/REFERENCE_RESEARCH.md for provenance.
+ * <p>1.1.2 behavior: a thinned ragged carpet — 602 charges over radii
+ * 6..51 with per-charge angular jitter and wide scatter, so the footprint
+ * reads as a torn bombardment zone rather than clean circles. Counts,
+ * jitter, and scatter are all configurable; see docs/REFERENCE_RESEARCH.md
+ * for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -26,11 +26,11 @@ public final class NukePattern {
     public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
 
     /**
-     * Charges per ring. Sums to 1999 ring charges; plus the center charge
-     * each strike uses 2000 TNT (Wemmbus scale; the 1.0.0 reference port
-     * used 668 + 1 — see docs/REFERENCE_RESEARCH.md).
+     * Charges per ring. Sums to 601 ring charges; plus the center charge
+     * each strike uses 602 TNT — the 2000-charge carpet thinned by 70%
+     * (same 10-ring proportions, in-game feedback 1.1.2).
      */
-    public static final int[] RING_COUNTS = {45, 81, 114, 147, 186, 219, 249, 285, 321, 352};
+    public static final int[] RING_COUNTS = {14, 24, 34, 44, 56, 66, 75, 86, 96, 106};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;

@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.1.1 — stab drill correction
+## 1.1.2 — 70% payload trim
+
+- Nuke thinned 2000 → 602 TNT (rings `{14, …, 106}`, same proportions,
+  jitter and scatter kept); payload cap default 650.
+- Stab thinned 480 → 144 TNT (3-charge groups every 8 blocks, full
+  world height, blast-resistance stop kept); depth cap default 64 steps.
 
 - Stab keeps the blast-resistance stop (≥ 1200): the drill takes only the
   target's x/z, sweeps the full world height top-down, and halts at the

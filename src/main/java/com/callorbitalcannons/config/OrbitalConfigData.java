@@ -13,16 +13,16 @@ public final class OrbitalConfigData {
     /** Zero disables the per-player recharge (rods are single-use anyway). */
     public long playerCooldownTicks = 0;
     public int maxActiveStrikes = 4;
-    public int nukePayloadLimit = 2000;
+    public int nukePayloadLimit = 650;
     public int nukeRingCount = 10;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
     public double nukeMisalignRange = 2.0;
     /** Per-charge angular wander, as a fraction of one charge spacing. */
     public double nukeAngularJitter = 0.5;
-    public int stabMaxSteps = 128;
-    public int stabTntPerStep = 5;
-    public int stabStepSize = 4;
+    public int stabMaxSteps = 64;
+    public int stabTntPerStep = 3;
+    public int stabStepSize = 8;
     public double stabVerticalOffset = 0.75;
     public int stabFuseTicks = 1;
     public float blastResistanceStop = 1200.0f;
@@ -40,15 +40,15 @@ public final class OrbitalConfigData {
         strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
         playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 0);
         maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
-        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 2000);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 650);
         nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
         nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 2.0);
         nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.5);
-        stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 128);
-        stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 5);
-        stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 4);
+        stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 64);
+        stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 3);
+        stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 8);
         stabVerticalOffset = clampDouble(warnings, "stabVerticalOffset", stabVerticalOffset, 0.0, 4.0, 0.75);
         stabFuseTicks = clampInt(warnings, "stabFuseTicks", stabFuseTicks, 1, 32767, 1);
         if (blastResistanceStop < 0.0f || Float.isNaN(blastResistanceStop)) {

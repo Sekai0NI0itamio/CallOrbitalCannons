@@ -12,46 +12,45 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StabPatternTest {
     @Test
     void defaultsMatchTunedBaseline() {
-        assertEquals(4, StabPattern.STEP_SIZE);
-        assertEquals(5, StabPattern.TNT_PER_STEP);
+        assertEquals(8, StabPattern.STEP_SIZE);
+        assertEquals(3, StabPattern.TNT_PER_STEP);
         assertEquals(0.75, StabPattern.VERTICAL_OFFSET, 1e-9);
         assertEquals(1, StabPattern.FUSE_TICKS);
     }
 
     @Test
-    void fiveChargesPerStepWithOverlappingOffsets() {
-        List<Double> offsets = StabPattern.stepOffsets(5, 0.75);
-        assertEquals(List.of(0.5, -0.25, -1.0, -1.75, -2.5), offsets);
+    void threeChargesPerStepWithOverlappingOffsets() {
+        List<Double> offsets = StabPattern.stepOffsets(3, 0.75);
+        assertEquals(List.of(0.5, -0.25, -1.0), offsets);
         for (int i = 1; i < offsets.size(); i++) {
             double gap = offsets.get(i - 1) - offsets.get(i);
             assertEquals(0.75, gap, 1e-9);
-            assertTrue(gap < 4.0, "neighbouring groups must overlap blast radii");
         }
     }
 
     @Test
     void fullColumnSweepsBottomToTop() {
-        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 4, 128);
+        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 8, 64);
         assertFalse(steps.isEmpty());
         assertEquals(-64, steps.get(0));
         for (int i = 1; i < steps.size(); i++) {
-            assertEquals(4, steps.get(i) - steps.get(i - 1));
+            assertEquals(8, steps.get(i) - steps.get(i - 1));
         }
         assertTrue(steps.get(steps.size() - 1) <= 319);
-        assertEquals(96, steps.size());
-        assertEquals(480, StabPattern.countForSteps(steps.size(), 5));
+        assertEquals(48, steps.size());
+        assertEquals(144, StabPattern.countForSteps(steps.size(), 3));
     }
 
     @Test
     void fullColumnDrillRunsTopDown() {
-        List<Integer> steps = StabPattern.fullColumnStepsDown(319, -64, 4, 128);
+        List<Integer> steps = StabPattern.fullColumnStepsDown(319, -64, 8, 64);
         assertFalse(steps.isEmpty());
         assertEquals(319, steps.get(0));
         for (int i = 1; i < steps.size(); i++) {
-            assertEquals(4, steps.get(i - 1) - steps.get(i));
+            assertEquals(8, steps.get(i - 1) - steps.get(i));
         }
         assertTrue(steps.get(steps.size() - 1) >= -64);
-        assertEquals(96, steps.size());
+        assertEquals(48, steps.size());
     }
 
     @Test

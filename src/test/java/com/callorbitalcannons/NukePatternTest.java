@@ -18,14 +18,14 @@ class NukePatternTest {
     }
 
     @Test
-    void ringCountsGiveWemmbusScalePayload() {
-        assertArrayEquals(new int[]{45, 81, 114, 147, 186, 219, 249, 285, 321, 352}, NukePattern.RING_COUNTS);
+    void ringCountsGiveThinnedPayload() {
+        assertArrayEquals(new int[]{14, 24, 34, 44, 56, 66, 75, 86, 96, 106}, NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchTwoThousandBaseline() {
-        assertEquals(1999, NukePattern.ringTotal());
-        assertEquals(2000, NukePattern.totalPayload());
+    void ringTotalsMatchSixHundredBaseline() {
+        assertEquals(601, NukePattern.ringTotal());
+        assertEquals(602, NukePattern.totalPayload());
     }
 
     @Test
