@@ -1,0 +1,118 @@
+# Reference research
+
+Selected upstream revision: `067fbcddf6351608f4646c9f6ffaa9b6afae14c4`
+(`RelmesStudios/orbitalstrike`, commit message "refactor: migrate build
+directory and implement chunk-forced stasis unloading in entity mixins",
+2026-07-15). Inspected 2026-10-16 via the GitHub API and raw file fetches.
+
+## 1. References inspected
+
+### 1a. Cubicmetre / Wemmbu video (concept only)
+
+`https://www.youtube.com/watch?v=q78LRgHt_zU` — cited by the task as the
+original Orbital Strike Cannon demonstration from the Unstable SMP context.
+No frame-level mechanics (dispenser counts, timings, accelerator design)
+could be extracted or verified from this session, so the video is treated
+as a **concept reference only**. Nothing in this mod claims to reproduce
+the original redstone contraption tick-for-tick.
+
+### 1b. Wemmbu's Orbital Cannons (WOC) on CurseForge (behavioral only)
+
+`https://www.curseforge.com/minecraft/mc-mods/wemmbus-orbital-cannons-woc` —
+the page could not be fetched from this environment (HTTP 403 from the
+fetch backend), and its license is listed as **All Rights Reserved**.
+It is therefore treated as a **behavioral reference only**: no code,
+assets, or text were taken from it.
+
+### 1c. RelmesStudios/orbitalstrike (technical reference, Apache-2.0)
+
+`https://github.com/RelmesStudios/orbitalstrike` — public Fabric mod
+recreating the Orbital Strike Cannon. Its `LICENSE` file is the Apache
+License, Version 2.0 (copyright 2026 Relmes Studios), with a `NOTICE`
+file carrying the same attribution. Source files read in full:
+
+- `src/main/java/pier4y/orbitalstrike/strike/StrikeManager.java`
+  (nuke / stab / stasis / wolf / wither spawners, pending-strike queue)
+- `src/main/java/pier4y/orbitalstrike/event/FishingRodUseHandler.java`
+  (rod validation via `CUSTOM_DATA`, raycast targeting, 10-tick delay)
+- `src/main/java/pier4y/orbitalstrike/config/OrbitalStrikeConfig.java`
+  (all tuning values)
+- `src/main/java/pier4y/orbitalstrike/command/OscCommand.java`
+  (rod factory, `/osc` tree)
+- `src/main/java/pier4y/orbitalstrike/Orbitalstrike.java` (entrypoint)
+- `src/main/resources/fabric.mod.json`, `orbitalstrike.mixins.json`
+
+## 2. Exact behavior found in the reference source
+
+Nuke (`spawnNuke`):
+
+- 1 stationary center TNT + 10 rings, radii
+  `{6, 11, 16, 21, 26, 31, 36, 41, 46, 51}`, per-ring counts
+  `{15, 27, 38, 49, 62, 73, 83, 95, 107, 119}`.
+- All charges spawn 72 blocks above the target (`nukeSpawnHeight`),
+  fuse 79 ticks (`nukeFuseTicks`), zero vertical velocity.
+- Horizontal velocity per charge: `v = targetOffset / scale` with
+  `scale = (1 - 0.98^fuse) / 0.02` (closed-form TNT drag integration).
+- Misalignment: uniform point in a disc of radius `nukeMisalignRange`
+  (`sqrt(rand) * range` for uniformity), then radial clamp into the ring
+  band (midpoint to neighbours; first ring min 0, last ring max
+  `radius + range`).
+- Even angular spacing `(2 * PI * j) / count` per ring.
+
+Stab (`spawnStab`):
+
+- Column from `targetY + 5` downward in steps of 4 (`stabStepSize`),
+  5 TNT per step (`stabTntPerStep`) at `y + 0.5 - t * 0.75`
+  (`stabTntVerticalOffset`), fuse 1 (`stabFuseTicks`), `setNoGravity(true)`.
+- Stops after spawning on the first block whose
+  `getExplosionResistance() >= 1200.0` (`blastResistanceStopThreshold`),
+  scanning down to world minimum.
+
+Rods and activation:
+
+- Plain fishing rod + `CUSTOM_DATA` NBT `{OrbitalStrikeRod: true,
+  StrikeType: "nuke"|"stab"|..., [HasTargetPos, TargetX/Y/Z]}`.
+- `UseItemCallback`: raycast `player.pick(120.0, ...)`; rod breaks
+  immediately (`stack.shrink(1)` + break sound); strike fires exactly
+  10 ticks (0.5 s) later via the pending queue.
+- Commands: `/osc give nuke|stab [player]`, `/osc strike nuke|stab x y z`
+  (permission level 2). Rod display name is plain white italic
+  `"<type> shot"` with **no** enchantment glint.
+
+Extras in the reference that this mod deliberately omits: stasis pearls,
+wolf packs, wither-skull domes, the parallel ForkJoinPool explosion
+raycast mixins, drop-rate reduction, and chunk-forcing.
+
+## 3. Documented discrepancies (README vs source)
+
+| Claim | README text | Source code | This mod |
+|---|---|---|---|
+| Nuke total | 661 (660 ring + 1) | ring counts sum to **668**, +1 = **669** | 669 (code wins), documented here |
+| Ring range | 15 to 119 | `{15, …, 119}` inclusive | verbatim |
+| Misalignment | 1.75 blocks (half of 3.5) | `nukeMisalignRange = 0.5` | 0.5 (code wins), documented here |
+
+The per-ring counts were taken from source, never guessed; the totals
+above are arithmetic on those verbatim values
+(15+27+38+49+62+73+83+95+107+119 = 668).
+
+## 4. Original vs reference vs this mod
+
+- **Original redstone cannon** (Cubicmetre/Wemmbu): a manually built,
+  redstone-driven TNT accelerator. Exact dispenser layout, timings, and
+  duplication mechanics are unverified (see §1a).
+- **Reference mod**: rod/command-triggered spawners on modern Minecraft
+  (26.x, official mappings) with mixins, extra joke shots, fixed 120-block
+  targeting, no cooldown, no payload cap.
+- **This mod**: 1.21.1 + Fabric + Yarn port of the nuke/stab ballistics
+  only, with no mixins (vanilla TNT entities and explosions on the server
+  thread), orientation-distinct 64-TNT crafting recipes, a scheduler with
+  cooldown and payload caps, 200-block default targeting, and
+  `/orbital` admin commands.
+
+## 5. Unverifiable behavior (explicit approximations)
+
+- Exact fidelity to the original redstone contraption (unverifiable).
+- WOC behavior beyond its public description (page unfetchable).
+- Video-derived timings or accelerator mechanics (none extracted).
+- Client render performance and server TPS under a full strike (no
+  runtime measurement in CI; see `docs/PERFORMANCE.md`).

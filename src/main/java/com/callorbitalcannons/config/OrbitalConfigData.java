@@ -1,0 +1,81 @@
+package com.callorbitalcannons.config;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Pure configuration data with validation. File I/O lives in
+ * {@link OrbitalConfig}; every rule here is unit tested without Minecraft.
+ */
+public final class OrbitalConfigData {
+    public double targetingRange = 200.0;
+    public int strikeDelayTicks = 10;
+    public long playerCooldownTicks = 100;
+    public int maxActiveStrikes = 4;
+    public int nukePayloadLimit = 700;
+    public int nukeRingCount = 10;
+    public double nukeSpawnHeight = 72.0;
+    public int nukeFuseTicks = 79;
+    public double nukeMisalignRange = 0.5;
+    public int stabMaxSteps = 80;
+    public int stabTntPerStep = 5;
+    public int stabStepSize = 4;
+    public double stabVerticalOffset = 0.75;
+    public int stabFuseTicks = 1;
+    public float blastResistanceStop = 1200.0f;
+    public boolean terrainDestruction = true;
+    public boolean reduceBlockDrops = false;
+    public boolean consumeInCreative = false;
+
+    /**
+     * Clamps every value into its safe range, repairing malformed files.
+     * Returns human-readable warnings for each correction applied.
+     */
+    public List<String> validate() {
+        List<String> warnings = new ArrayList<>();
+        targetingRange = clampDouble(warnings, "targetingRange", targetingRange, 16.0, 512.0, 200.0);
+        strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
+        playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 100);
+        maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 5000, 700);
+        nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
+        nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
+        nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
+        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 0.5);
+        stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 80);
+        stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 5);
+        stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 4);
+        stabVerticalOffset = clampDouble(warnings, "stabVerticalOffset", stabVerticalOffset, 0.0, 4.0, 0.75);
+        stabFuseTicks = clampInt(warnings, "stabFuseTicks", stabFuseTicks, 1, 32767, 1);
+        if (blastResistanceStop < 0.0f || Float.isNaN(blastResistanceStop)) {
+            warnings.add("blastResistanceStop out of range, reset to 1200.0");
+            blastResistanceStop = 1200.0f;
+        }
+        return warnings;
+    }
+
+    private static int clampInt(List<String> warnings, String key, int value, int min, int max, int fallback) {
+        if (value < min || value > max) {
+            warnings.add(key + " out of range [" + min + ", " + max + "], reset to " + fallback);
+            return fallback;
+        }
+        return value;
+    }
+
+    private static long clampLong(List<String> warnings, String key, long value, long min, long max, long fallback) {
+        if (value < min || value > max) {
+            warnings.add(key + " out of range [" + min + ", " + max + "], reset to " + fallback);
+            return fallback;
+        }
+        return value;
+    }
+
+    private static double clampDouble(List<String> warnings, String key, double value,
+                                       double min, double max, double fallback) {
+        if (Double.isNaN(value) || value < min || value > max) {
+            warnings.add(key + " out of range [" + min + ", " + max + "], reset to " + fallback);
+            return fallback;
+        }
+        return value;
+    }
+}

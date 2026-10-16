@@ -1,0 +1,7 @@
+{
+  "item.callorbitalcannons.orbital_rod": "Orbital Fishing Rod",
+  "item.callorbitalcannons.stab_rod": "Stab Shot Fishing Rod",
+  "message.callorbitalcannons.no_target": "No target in range.",
+  "message.callorbitalcannons.cooldown": "Orbital cannon recharging.",
+  "command.callorbitalcannons.rejected": "Strike rejected."
+}
