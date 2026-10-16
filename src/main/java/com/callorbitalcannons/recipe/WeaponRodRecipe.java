@@ -99,8 +99,21 @@ public class WeaponRodRecipe extends SpecialCraftingRecipe {
         private static RecipeSerializer<WeaponRodRecipe> serializerFor(WeaponMode mode) {
             final MapCodec<WeaponRodRecipe> codec =
                     MapCodec.unit(() -> new WeaponRodRecipe(mode, CraftingRecipeCategory.MISC));
-            final PacketCodec<RegistryByteBuf, WeaponRodRecipe> packetCodec =
-                    PacketCodec.unit(new WeaponRodRecipe(mode, CraftingRecipeCategory.MISC));
+            // Stateless recipe: nothing to write. NOTE: PacketCodec.unit() must
+            // NOT be used here — vanilla's unit codec rejects on encode any
+            // instance that is not its exact fixed object (reference check),
+            // which crashes recipe sync because datapack-loaded recipes are
+            // fresh instances. This tolerant codec accepts any instance.
+            final PacketCodec<RegistryByteBuf, WeaponRodRecipe> packetCodec = new PacketCodec<>() {
+                @Override
+                public WeaponRodRecipe decode(RegistryByteBuf buf) {
+                    return new WeaponRodRecipe(mode, CraftingRecipeCategory.MISC);
+                }
+
+                @Override
+                public void encode(RegistryByteBuf buf, WeaponRodRecipe value) {
+                }
+            };
             return new RecipeSerializer<WeaponRodRecipe>() {
                 @Override
                 public MapCodec<WeaponRodRecipe> codec() {
