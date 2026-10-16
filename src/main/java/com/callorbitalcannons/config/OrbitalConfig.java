@@ -57,7 +57,7 @@ public final class OrbitalConfig {
             for (String warning : instance.validate()) {
                 LOG.warn("[CallOrbitalCannons] config: {}", warning);
             }
-        } catch (IOException | JsonParseException | RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             LOG.error("[CallOrbitalCannons] Failed to load config, keeping safe defaults", e);
             try {
                 Files.move(path, path.resolveSibling("callorbitalcannons.json.invalid"),
