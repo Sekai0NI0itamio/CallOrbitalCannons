@@ -25,6 +25,7 @@ public final class OrbitalConfigData {
     public int stabStepSize = 4;
     public double stabVerticalOffset = 0.75;
     public int stabFuseTicks = 1;
+    public float blastResistanceStop = 1200.0f;
     public boolean terrainDestruction = true;
     public boolean reduceBlockDrops = false;
     public boolean consumeInCreative = false;
@@ -50,6 +51,10 @@ public final class OrbitalConfigData {
         stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 4);
         stabVerticalOffset = clampDouble(warnings, "stabVerticalOffset", stabVerticalOffset, 0.0, 4.0, 0.75);
         stabFuseTicks = clampInt(warnings, "stabFuseTicks", stabFuseTicks, 1, 32767, 1);
+        if (blastResistanceStop < 0.0f || Float.isNaN(blastResistanceStop)) {
+            warnings.add("blastResistanceStop out of range, reset to 1200.0");
+            blastResistanceStop = 1200.0f;
+        }
         return warnings;
     }
 

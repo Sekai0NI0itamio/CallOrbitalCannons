@@ -16,7 +16,7 @@ approximated, and where this mod differs.
 | Rod | Strike | Effect |
 |---|---|---|
 | Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 2000 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up in a ragged, jittered carpet across a ~100-block footprint. Fires silently in chat — only the warning sound plays |
-| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, swept bottom-to-top in 5-TNT groups every 4 blocks, 1-tick fuses, drilling through everything |
+| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down in 5-TNT groups every 4 blocks with 1-tick fuses — stops at the first blast-resistant block (≥ 1200) |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
 forges a weapon. Rods carry a single durability point: the first survival
@@ -88,6 +88,7 @@ target in chat as before.
 | stabStepSize | 4 | Blocks between groups |
 | stabVerticalOffset | 0.75 | Charge spacing inside a group |
 | stabFuseTicks | 1 | Stab TNT fuse |
+| blastResistanceStop | 1200.0 | Resistance that stops the drill |
 | terrainDestruction | true | Reserved: not enforced in 1.x |
 | reduceBlockDrops | false | Reserved: not enforced in 1.x |
 | consumeInCreative | false | Break rods in creative mode |

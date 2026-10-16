@@ -26,6 +26,7 @@ class ConfigAndModeTest {
         assertEquals(128, data.stabMaxSteps);
         assertEquals(5, data.stabTntPerStep);
         assertEquals(4, data.stabStepSize);
+        assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
     }
 
     @Test
@@ -39,7 +40,8 @@ class ConfigAndModeTest {
         data.nukePayloadLimit = 0;
         data.nukeAngularJitter = 2.0;
         data.stabMaxSteps = 0;
-        assertEquals(8, data.validate().size());
+        data.blastResistanceStop = Float.NaN;
+        assertEquals(9, data.validate().size());
         assertEquals(200.0, data.targetingRange, 1e-9);
         assertEquals(10, data.strikeDelayTicks);
         assertEquals(4, data.maxActiveStrikes);
@@ -48,6 +50,7 @@ class ConfigAndModeTest {
         assertEquals(2000, data.nukePayloadLimit);
         assertEquals(0.5, data.nukeAngularJitter, 1e-9);
         assertEquals(128, data.stabMaxSteps);
+        assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
     }
 
     @Test

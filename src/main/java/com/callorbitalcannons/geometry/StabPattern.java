@@ -10,8 +10,14 @@ import java.util.List;
  * Each charge uses a 1-tick fuse and no gravity, so the whole column
  * detonates near-simultaneously from the bottom up.
  *
- * <p>1.1.0 behavior, per in-game feedback: the column ignores the target's
- * Y and any blast resistance — every block in the column is hit.
+ * <p>1.1.x behavior, per in-game feedback: the column spans the full world
+ * height at the target's x/z instead of clustering around the clicked Y —
+ * but blast-resistant blocks (≥ 1200) still block the drill, exactly like
+ * the reference stopping rule.
+ *
+ * <p>The sweep runs top-down so the stop triggers on the first resistant
+ * layer met from the sky (a bottom-up sweep would halt immediately on the
+ * bedrock floor).
  */
 public final class StabPattern {
     private StabPattern() {
@@ -29,6 +35,9 @@ public final class StabPattern {
     /** Reference fuse: near-simultaneous detonation. */
     public static final int FUSE_TICKS = 1;
 
+    /** Blast-resistance stopping threshold (obsidian / ancient debris class). */
+    public static final float STOP_RESISTANCE = 1200.0f;
+
     /** Y offsets of the charges inside one step group, top first. */
     public static List<Double> stepOffsets(int perStep, double verticalOffset) {
         List<Double> offsets = new ArrayList<>(perStep);
@@ -36,6 +45,26 @@ public final class StabPattern {
             offsets.add(0.5 - t * verticalOffset);
         }
         return offsets;
+    }
+
+    /** Reference stopping rule: block resists when at or above threshold. */
+    public static boolean isStoppingBlock(float blastResistance, float threshold) {
+        return blastResistance >= threshold;
+    }
+
+    /**
+     * Full-column step Y coordinates from {@code maxYInclusive} down to
+     * {@code minY}, honouring the configured step size and the maximum
+     * number of steps.
+     */
+    public static List<Integer> fullColumnStepsDown(int maxYInclusive, int minY, int stepSize, int maxSteps) {
+        List<Integer> steps = new ArrayList<>();
+        int taken = 0;
+        for (int y = maxYInclusive; y >= minY && taken < maxSteps; y -= stepSize) {
+            steps.add(y);
+            taken++;
+        }
+        return steps;
     }
 
     /**

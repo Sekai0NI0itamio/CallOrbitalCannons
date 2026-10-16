@@ -6,8 +6,9 @@
   entities** spawned in one server tick, fuse 79 ticks (~4 s), all
   exploding within a short window across a ~100-block-diameter footprint.
 - Stab (default config): 5 charges per 4-block step across the full world
-  height. A default world (-64..319) needs 96 steps, i.e. **480 TNT
-  entities** with 1-tick fuses detonating near-simultaneously.
+  height, top-down. A default world (-64..319) needs up to 96 steps, i.e.
+  up to **480 TNT entities** with 1-tick fuses — fewer when the drill
+  meets blast-resistant rock early.
 
 ## Main performance risks
 

@@ -2,7 +2,7 @@
 
 ## 1.1.0 (in-game feedback)
 - [x] Nuke: 2000 payload, ring counts {45..352}, jitter + scatter defaults, ragged carpet
-- [x] Stab: full bottom-to-top column at x/z, no blast-resistance stop
+- [ ] Stab: full-height column at x/z swept top-down, blast-resistance stop kept
 - [x] Rods spawn at 1 durability and break on first survival use
 - [x] Cooldown default 0 (mechanism kept, disabled); nuke rod chat-silent
 - [x] CI green on 1.1.0, JAR refreshed locally

@@ -43,6 +43,26 @@ class StabPatternTest {
     }
 
     @Test
+    void fullColumnDrillRunsTopDown() {
+        List<Integer> steps = StabPattern.fullColumnStepsDown(319, -64, 4, 128);
+        assertFalse(steps.isEmpty());
+        assertEquals(319, steps.get(0));
+        for (int i = 1; i < steps.size(); i++) {
+            assertEquals(4, steps.get(i - 1) - steps.get(i));
+        }
+        assertTrue(steps.get(steps.size() - 1) >= -64);
+        assertEquals(96, steps.size());
+    }
+
+    @Test
+    void stoppingRuleMatchesBlastResistantBlocks() {
+        assertTrue(StabPattern.isStoppingBlock(1200.0f, 1200.0f));
+        assertTrue(StabPattern.isStoppingBlock(3600000.0f, 1200.0f));
+        assertFalse(StabPattern.isStoppingBlock(1199.9f, 1200.0f));
+        assertFalse(StabPattern.isStoppingBlock(6.0f, 1200.0f));
+    }
+
+    @Test
     void maxStepsCapsColumnDepth() {
         List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 4, 3);
         assertEquals(List.of(-64, -60, -56), steps);

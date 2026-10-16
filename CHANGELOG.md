@@ -1,14 +1,19 @@
 # Changelog
 
+## 1.1.1 — stab drill correction
+
+- Stab keeps the blast-resistance stop (≥ 1200): the drill takes only the
+  target's x/z, sweeps the full world height top-down, and halts at the
+  first blast-resistant block — bedrock and obsidian still block it.
+
 ## 1.1.0 — in-game feedback tuning
 
 - Nuke is now a Wemmbus-scale ragged carpet: 2000 TNT (center + 10 rings
   of 45–352), per-charge angular jitter plus a wider scatter disc, so the
   footprint reads as a torn bombardment zone instead of clean circles.
-- Stab now sweeps the full column at the target's x/z from the world
-  bottom to the top, bottom-up; the blast-resistance stop is gone, so
-  every block in the column is hit (config key `blastResistanceStop`
-  retired — stale keys in existing configs are safely ignored).
+- Stab sweeps the full column at the target's x/z from the world top
+  down (no longer clustered around the clicked Y); the blast-resistance
+  stop is kept, so every non-resistant block in the column is hit.
 - Weapon rods spawn with a single durability point and truly break on the
   first survival use (break sound included).
 - Per-player recharge is off by default (`playerCooldownTicks = 0`); the

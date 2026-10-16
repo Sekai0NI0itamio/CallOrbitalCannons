@@ -120,9 +120,12 @@ above are arithmetic on those verbatim values
   2000) with angular jitter (default 0.5 of one spacing) and a wider
   scatter disc (default 2.0). Exact Wemmbus dispenser mechanics remain
   unverified; this is a tuned approximation, not a measured recreation.
-- **Stab is now a full bottom-to-top column.** Per player request the
-  drill ignores target Y and blast resistance and hits every block in the
-  column — an intentional departure from the reference stopping rule.
+- **Stab now spans the full world height.** Per player request the drill
+  takes only the target's x/z and sweeps top-down from the world ceiling
+  instead of clustering around the clicked Y — but the blast-resistance
+  stop (≥ 1200) is kept exactly as the reference rule, so bedrock and
+  obsidian still block it. The sweep runs top-down (not bottom-up) because
+  a bottom-up sweep would halt immediately on the bedrock floor.
 - Rods are single-durability break-on-use, the recharge defaults to off,
   and the Orbital rod is chat-silent: usability requests, not reference
   behavior.

@@ -11,9 +11,11 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 
 /**
- * Stab Shot: the full vertical column at the target's x/z, from the world
- * bottom to the top, swept bottom-up in groups of 5 overlapping-fuse TNT
+ * Stab Shot: the full vertical column at the target's x/z, swept top-down
+ * from the world ceiling to the floor in groups of 5 overlapping-fuse TNT
  * charges every 4 blocks. Each charge has a 1-tick fuse and no gravity.
+ * The drill stops after the first blast-resistant block, like the
+ * reference stopping rule.
  */
 public final class StabStrike {
     private StabStrike() {
@@ -24,11 +26,15 @@ public final class StabStrike {
         int minY = world.getBottomY();
         int maxY = world.getTopY() - 1;
         List<Integer> steps =
-                StabPattern.fullColumnStepsUp(minY, maxY, config.stabStepSize, config.stabMaxSteps);
+                StabPattern.fullColumnStepsDown(maxY, minY, config.stabStepSize, config.stabMaxSteps);
         List<Double> offsets = StabPattern.stepOffsets(config.stabTntPerStep, config.stabVerticalOffset);
 
         int spawned = 0;
+        int groups = 0;
         for (int y : steps) {
+            BlockPos probe = new BlockPos(target.getX(), y, target.getZ());
+            float resistance = world.getBlockState(probe).getBlock().getBlastResistance();
+            boolean stopping = StabPattern.isStoppingBlock(resistance, config.blastResistanceStop);
             for (double offset : offsets) {
                 TntEntity tnt = new TntEntity(world, target.getX() + 0.5, y + offset, target.getZ() + 0.5, null);
                 tnt.setFuse(config.stabFuseTicks);
@@ -38,9 +44,15 @@ public final class StabStrike {
                     spawned++;
                 }
             }
+            groups++;
+            if (stopping) {
+                OrbitalConfig.LOG.info("[CallOrbitalCannons] stab stopped by blast-resistant block at {}.",
+                        probe.toShortString());
+                break;
+            }
         }
         OrbitalConfig.LOG.info("[CallOrbitalCannons] stab strike at x={} z={} spawned {} charges in {} groups.",
-                target.getX(), target.getZ(), spawned, steps.size());
+                target.getX(), target.getZ(), spawned, groups);
         return spawned;
     }
 }
