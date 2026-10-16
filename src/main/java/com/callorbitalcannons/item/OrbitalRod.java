@@ -29,7 +29,7 @@ public final class OrbitalRod {
     /** Builds one single-use weapon rod of {@code mode}. */
     public static ItemStack create(WeaponMode mode) {
         ItemStack rod = new ItemStack(Items.FISHING_ROD);
-        rod.setDamageValue(rod.getMaxDamage() - 1);
+        rod.set(DataComponentTypes.DAMAGE, rod.getMaxDamage() - 1);
         rod.set(DataComponentTypes.CUSTOM_NAME,
                 Text.literal(mode.displayName()).formatted(Formatting.AQUA).formatted(Formatting.ITALIC));
         rod.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
