@@ -1,11 +1,11 @@
 # Criteria: CallOrbitalCannons
 
 ## 1.1.0 (in-game feedback)
-- [ ] Nuke: 2000 payload, ring counts {45..352}, jitter + scatter defaults, ragged carpet
-- [ ] Stab: full bottom-to-top column at x/z, no blast-resistance stop
-- [ ] Rods spawn at 1 durability and break on first survival use
-- [ ] Cooldown default 0 (mechanism kept, disabled); nuke rod chat-silent
-- [ ] CI green on 1.1.0, JAR refreshed locally
+- [x] Nuke: 2000 payload, ring counts {45..352}, jitter + scatter defaults, ragged carpet
+- [x] Stab: full bottom-to-top column at x/z, no blast-resistance stop
+- [x] Rods spawn at 1 durability and break on first survival use
+- [x] Cooldown default 0 (mechanism kept, disabled); nuke rod chat-silent
+- [x] CI green on 1.1.0, JAR refreshed locally
 
 ## 1.0.0 (all verified green on CI run 38901389959)
 
