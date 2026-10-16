@@ -15,13 +15,17 @@ class ConfigAndModeTest {
         assertTrue(data.validate().isEmpty());
         assertEquals(200.0, data.targetingRange, 1e-9);
         assertEquals(10, data.strikeDelayTicks);
-        assertEquals(100L, data.playerCooldownTicks);
+        assertEquals(0L, data.playerCooldownTicks);
         assertEquals(4, data.maxActiveStrikes);
+        assertEquals(2000, data.nukePayloadLimit);
         assertEquals(10, data.nukeRingCount);
         assertEquals(72.0, data.nukeSpawnHeight, 1e-9);
         assertEquals(79, data.nukeFuseTicks);
-        assertEquals(80, data.stabMaxSteps);
-        assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
+        assertEquals(2.0, data.nukeMisalignRange, 1e-9);
+        assertEquals(0.5, data.nukeAngularJitter, 1e-9);
+        assertEquals(128, data.stabMaxSteps);
+        assertEquals(5, data.stabTntPerStep);
+        assertEquals(4, data.stabStepSize);
     }
 
     @Test
@@ -32,14 +36,18 @@ class ConfigAndModeTest {
         data.maxActiveStrikes = 0;
         data.nukeRingCount = 99;
         data.nukeFuseTicks = 0;
-        data.blastResistanceStop = Float.NaN;
-        assertEquals(6, data.validate().size());
+        data.nukePayloadLimit = 0;
+        data.nukeAngularJitter = 2.0;
+        data.stabMaxSteps = 0;
+        assertEquals(8, data.validate().size());
         assertEquals(200.0, data.targetingRange, 1e-9);
         assertEquals(10, data.strikeDelayTicks);
         assertEquals(4, data.maxActiveStrikes);
         assertEquals(10, data.nukeRingCount);
         assertEquals(79, data.nukeFuseTicks);
-        assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
+        assertEquals(2000, data.nukePayloadLimit);
+        assertEquals(0.5, data.nukeAngularJitter, 1e-9);
+        assertEquals(128, data.stabMaxSteps);
     }
 
     @Test

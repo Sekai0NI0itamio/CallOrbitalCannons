@@ -34,8 +34,8 @@ public final class NukeStrike {
             counts[i] = NukePattern.RING_COUNTS[i];
         }
 
-        List<NukePattern.Placement> placements =
-                NukePattern.generatePlacements(random, radii, counts, config.nukeMisalignRange, config.nukeFuseTicks);
+        List<NukePattern.Placement> placements = NukePattern.generatePlacements(random, radii, counts,
+                config.nukeMisalignRange, config.nukeFuseTicks, config.nukeAngularJitter);
 
         int allowed = config.nukePayloadLimit;
         int ringToSpawn = Math.min(placements.size(), Math.max(0, allowed - 1));

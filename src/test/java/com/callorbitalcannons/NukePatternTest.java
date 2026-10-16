@@ -18,21 +18,22 @@ class NukePatternTest {
     }
 
     @Test
-    void ringCountsAreVerbatimReferenceValues() {
-        assertArrayEquals(new int[]{15, 27, 38, 49, 62, 73, 83, 95, 107, 119}, NukePattern.RING_COUNTS);
+    void ringCountsGiveWemmbusScalePayload() {
+        assertArrayEquals(new int[]{45, 81, 114, 147, 186, 219, 249, 285, 321, 352}, NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchReferenceSource() {
-        assertEquals(668, NukePattern.ringTotal());
-        assertEquals(669, NukePattern.totalPayload());
+    void ringTotalsMatchTwoThousandBaseline() {
+        assertEquals(1999, NukePattern.ringTotal());
+        assertEquals(2000, NukePattern.totalPayload());
     }
 
     @Test
-    void defaultsMatchReferenceBaseline() {
+    void defaultsMatchTunedBaseline() {
         assertEquals(72.0, NukePattern.SPAWN_HEIGHT, 1e-9);
         assertEquals(79, NukePattern.FUSE_TICKS);
-        assertEquals(0.5, NukePattern.MISALIGN_RANGE, 1e-9);
+        assertEquals(2.0, NukePattern.MISALIGN_RANGE, 1e-9);
+        assertEquals(0.5, NukePattern.ANGULAR_JITTER, 1e-9);
         assertEquals(0.98, NukePattern.DRAG, 1e-9);
     }
 
@@ -70,7 +71,7 @@ class NukePatternTest {
     void placementsCoverEveryRingCharge() {
         List<NukePattern.Placement> placements = NukePattern.generatePlacements(new Random(1234),
                 NukePattern.RING_RADII, NukePattern.RING_COUNTS,
-                NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS);
+                NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS, NukePattern.ANGULAR_JITTER);
         assertEquals(NukePattern.ringTotal(), placements.size());
     }
 
@@ -79,7 +80,7 @@ class NukePatternTest {
         Random random = new Random(99);
         List<NukePattern.Placement> placements = NukePattern.generatePlacements(random,
                 NukePattern.RING_RADII, NukePattern.RING_COUNTS,
-                NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS);
+                NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS, NukePattern.ANGULAR_JITTER);
         int cursor = 0;
         for (int ring = 0; ring < NukePattern.RING_RADII.length; ring++) {
             double base = NukePattern.RING_RADII[ring];
@@ -97,9 +98,9 @@ class NukePatternTest {
     }
 
     @Test
-    void zeroMisalignmentLandsExactlyOnRings() {
+    void zeroScatterAndJitterLandsExactlyOnRings() {
         List<NukePattern.Placement> placements = NukePattern.generatePlacements(new Random(7),
-                NukePattern.RING_RADII, NukePattern.RING_COUNTS, 0.0, NukePattern.FUSE_TICKS);
+                NukePattern.RING_RADII, NukePattern.RING_COUNTS, 0.0, NukePattern.FUSE_TICKS, 0.0);
         int cursor = 0;
         for (int ring = 0; ring < NukePattern.RING_RADII.length; ring++) {
             for (int j = 0; j < NukePattern.RING_COUNTS[ring]; j++) {
@@ -107,5 +108,22 @@ class NukePatternTest {
                 assertEquals(NukePattern.RING_RADII[ring], Math.hypot(placement.dx(), placement.dz()), 1e-6);
             }
         }
+    }
+
+    @Test
+    void angularJitterBreaksPerfectCircles() {
+        List<NukePattern.Placement> even = NukePattern.generatePlacements(new Random(7),
+                new double[]{20.0}, new int[]{24}, 0.0, NukePattern.FUSE_TICKS, 0.0);
+        List<NukePattern.Placement> ragged = NukePattern.generatePlacements(new Random(7),
+                new double[]{20.0}, new int[]{24}, 0.0, NukePattern.FUSE_TICKS, 0.5);
+        int moved = 0;
+        for (int i = 0; i < even.size(); i++) {
+            double d = Math.hypot(even.get(i).dx() - ragged.get(i).dx(), even.get(i).dz() - ragged.get(i).dz());
+            if (d > 1e-9) {
+                moved++;
+            }
+            assertEquals(20.0, Math.hypot(ragged.get(i).dx(), ragged.get(i).dz()), 1e-6);
+        }
+        assertTrue(moved > even.size() / 2, "jitter should move most charges off even spacing");
     }
 }

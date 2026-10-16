@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Pure Nuke (Orbital) Shot geometry, ported from the RelmesStudios
- * {@code orbitalstrike} reference ({@code StrikeManager.spawnNuke}).
+ * Nuke (Orbital) Shot geometry: one stationary center charge plus ten
+ * concentric rings dropped from high above with drag-compensated outward
+ * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>Layout: one stationary center charge plus ten concentric rings at radii
- * 6..51 (step 5). Every ring charge spawns at the same point 72 blocks above
- * the target with an initial horizontal velocity chosen so that, after
- * {@code fuseTicks} of TNT drag (0.98 per tick), it lands at its assigned
- * ring position. A small uniform-disc misalignment is applied per charge and
- * clamped so each charge stays inside its ring band.
+ * <p>1.1.0 behavior: a Wemmbus-scale ragged carpet — 2000 charges over
+ * radii 6..51 with per-charge angular jitter and wide scatter, so the
+ * footprint reads as a torn bombardment zone rather than clean circles.
+ * Counts, jitter, and scatter are all configurable; see
+ * docs/REFERENCE_RESEARCH.md for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -26,11 +26,11 @@ public final class NukePattern {
     public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
 
     /**
-     * Charges per ring, verbatim from the reference {@code ringTntCounts}.
-     * Sums to 668 ring charges; plus the center charge the reference spawns
-     * 669 TNT (see docs/REFERENCE_RESEARCH.md for the 661-vs-669 discrepancy).
+     * Charges per ring. Sums to 1999 ring charges; plus the center charge
+     * each strike uses 2000 TNT (Wemmbus scale; the 1.0.0 reference port
+     * used 668 + 1 — see docs/REFERENCE_RESEARCH.md).
      */
-    public static final int[] RING_COUNTS = {15, 27, 38, 49, 62, 73, 83, 95, 107, 119};
+    public static final int[] RING_COUNTS = {45, 81, 114, 147, 186, 219, 249, 285, 321, 352};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;
@@ -41,8 +41,15 @@ public final class NukePattern {
     /** Per-tick horizontal velocity retention of a primed TNT entity. */
     public static final double DRAG = 0.98;
 
-    /** Reference default misalignment disc radius. */
-    public static final double MISALIGN_RANGE = 0.5;
+    /** Default scatter-disc radius per charge, in blocks. */
+    public static final double MISALIGN_RANGE = 2.0;
+
+    /**
+     * Default angular jitter as a fraction of one charge spacing: each
+     * charge's angle wanders up to ± this fraction of the even spacing,
+     * which breaks up the perfect-circle look.
+     */
+    public static final double ANGULAR_JITTER = 0.5;
 
     /** Placement of one ring charge relative to the target center. */
     public record Placement(double dx, double dz, double vx, double vz) {
@@ -79,7 +86,7 @@ public final class NukePattern {
 
     /**
      * Clamps (x, z) into the band of {@code ringIndex}: halfway to each
-     * neighbouring ring, or the documented edge rule for the first/last ring.
+     * neighbouring ring, or the edge rule for the first/last ring.
      */
     public static double[] clampToBand(double x, double z, int ringIndex, double[] radii, double misalign) {
         double baseRadius = radii[ringIndex];
@@ -97,20 +104,24 @@ public final class NukePattern {
     }
 
     /**
-     * Generates every ring placement for one strike using the reference
-     * algorithm: even angular spacing, uniform-disc misalignment, band clamp,
-     * drag-compensated velocity.
+     * Generates every ring placement for one strike: jittered angle around
+     * the even spacing, uniform-disc scatter, band clamp, then
+     * drag-compensated velocity toward the final offset.
      */
     public static List<Placement> generatePlacements(Random random, double[] radii, int[] counts,
-                                                     double misalign, int fuseTicks) {
+                                                     double misalign, int fuseTicks, double angularJitter) {
         List<Placement> out = new ArrayList<>();
         for (int i = 0; i < radii.length; i++) {
             double baseRadius = radii[i];
             int tntCount = counts[i];
+            double spacing = (2.0 * Math.PI) / tntCount;
             for (int j = 0; j < tntCount; j++) {
-                double angle = (2.0 * Math.PI * j) / tntCount;
+                double angle = spacing * j + (random.nextDouble() * 2.0 - 1.0) * angularJitter * spacing;
+
+                // Circular randomness: uniform point in a disc of radius misalign.
                 double offsetAngle = random.nextDouble() * 2.0 * Math.PI;
                 double offsetMag = Math.sqrt(random.nextDouble()) * misalign;
+
                 double idealX = baseRadius * Math.cos(angle);
                 double idealZ = baseRadius * Math.sin(angle);
                 double[] clamped = clampToBand(idealX + offsetMag * Math.cos(offsetAngle),

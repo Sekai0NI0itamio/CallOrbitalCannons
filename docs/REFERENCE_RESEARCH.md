@@ -109,7 +109,25 @@ above are arithmetic on those verbatim values
   cooldown and payload caps, 200-block default targeting, and
   `/orbital` admin commands.
 
-## 5. Unverifiable behavior (explicit approximations)
+## 6. 1.1.0 deviations (in-game feedback + Wemmbus scale)
+
+- **Nuke scaled to 2000 TNT.** Community documentation of Wemmbus-scale
+  strikes (vUnstable plugin: "2000 TNT entities, 10 concentric rings,
+  100x100 destruction area"; Relmes Modrinth page: 661 over 10 rings)
+  shows the real strike is a far bigger, ragged carpet than the 669-charge
+  reference port. Ring counts are now
+  `{45, 81, 114, 147, 186, 219, 249, 285, 321, 352}` (1999 + center =
+  2000) with angular jitter (default 0.5 of one spacing) and a wider
+  scatter disc (default 2.0). Exact Wemmbus dispenser mechanics remain
+  unverified; this is a tuned approximation, not a measured recreation.
+- **Stab is now a full bottom-to-top column.** Per player request the
+  drill ignores target Y and blast resistance and hits every block in the
+  column — an intentional departure from the reference stopping rule.
+- Rods are single-durability break-on-use, the recharge defaults to off,
+  and the Orbital rod is chat-silent: usability requests, not reference
+  behavior.
+
+## 7. Unverifiable behavior (explicit approximations)
 
 - Exact fidelity to the original redstone contraption (unverifiable).
 - WOC behavior beyond its public description (page unfetchable).

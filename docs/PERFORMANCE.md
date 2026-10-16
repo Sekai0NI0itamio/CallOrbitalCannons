@@ -2,13 +2,12 @@
 
 ## Expected entity counts
 
-- Nuke (default config): 1 center + 668 ring charges = **669 TNT entities**
-  spawned in one server tick, fuse 79 ticks (~4 s), all exploding within a
-  short window across a ~100-block-diameter footprint.
-- Stab (default config): 5 charges per 4-block step from `targetY + 5`
-  down. A surface target at y=64 in a default world drills ~33 steps to
-  y=-64, i.e. ~**165 TNT entities** with 1-tick fuses; deepslate-level
-  targets stop earlier, bedrock/obsidian stop almost immediately.
+- Nuke (default config): 1 center + 1999 ring charges = **2000 TNT
+  entities** spawned in one server tick, fuse 79 ticks (~4 s), all
+  exploding within a short window across a ~100-block-diameter footprint.
+- Stab (default config): 5 charges per 4-block step across the full world
+  height. A default world (-64..319) needs 96 steps, i.e. **480 TNT
+  entities** with 1-tick fuses detonating near-simultaneously.
 
 ## Main performance risks
 
@@ -27,10 +26,10 @@
 ## Safeguards and configuration limits
 
 - `StrikeScheduler`: server-thread-only queue, configurable
-  `strikeDelayTicks` (default 10), per-player `playerCooldownTicks`
-  (default 100), `maxActiveStrikes` (default 4), duplicate suppression
-  (same caster + target + mode), and `nukePayloadLimit` (default 700,
-  above the 669 baseline so the full pattern spawns uncapped by default).
+  `strikeDelayTicks` (default 10), optional `playerCooldownTicks`
+  (default 0 = off; rods are single-use), `maxActiveStrikes` (default 4),
+  duplicate suppression, and `nukePayloadLimit` (default 2000, exactly the
+  full pattern).
 - Coordinate/dimension validation at schedule time and revalidation
   (loaded chunk, world height) at fire time; state pruned on world unload
   and cleared on server shutdown with log lines for every rejection.
@@ -43,11 +42,11 @@
 
 ## CI tests and benchmark methodology
 
-- `NukePatternTest` asserts the exact entity budget (668 + 1) and that
+- `NukePatternTest` asserts the exact entity budget (1999 + 1) and that
   every placement lands inside its ring band, so footprint regressions
   fail the build.
-- `StabPatternTest` asserts the 5-per-step grouping and stopping rule,
-  bounding worst-case column depth via `stabMaxSteps`.
+- `StabPatternTest` asserts the full bottom-to-top column coverage,
+  the 5-per-step grouping, and the `stabMaxSteps` cap.
 - `StrikeRulesTest` covers cooldown, duplicate-window, range, and target
   sanity logic.
 - Runtime method (not run in CI): profile a creative-world nuke with
@@ -65,9 +64,9 @@ workflow run.
 ## Limitations of performance claims
 
 - "Safe by default" means *bounded and validated*, not *lag-free*: a full
-  nuke on a weak server will still spike the tick. Operators on shared
-  hardware should lower `nukePayloadLimit` / `maxActiveStrikes` or raise
-  `playerCooldownTicks`.
+  2000-TNT nuke or a 480-charge full-column stab on a weak server will
+  spike the tick hard. Operators on shared hardware should lower
+  `nukePayloadLimit`/`maxActiveStrikes`/`stabMaxSteps`.
 - `terrainDestruction` and `reduceBlockDrops` are parsed and validated but
   **not enforced** in 1.0.0 (vanilla explosion behavior always applies);
   enforcing them requires an explosion mixin planned for a later release.

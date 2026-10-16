@@ -15,11 +15,13 @@ approximated, and where this mod differs.
 
 | Rod | Strike | Effect |
 |---|---|---|
-| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 669 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up and detonate across a ~100-block footprint |
-| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | 5-TNT groups step down every 4 blocks from 5 above the target, 1-tick fuses, drilling until blast resistance ≥ 1200 |
+| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 2000 TNT (center + 10 rings, radii 6–51) fall from 72 blocks up in a ragged, jittered carpet across a ~100-block footprint. Fires silently in chat — only the warning sound plays |
+| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, swept bottom-to-top in 5-TNT groups every 4 blocks, 1-tick fuses, drilling through everything |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
-forges a weapon. Rods are single-use: one activation consumes the rod.
+forges a weapon. Rods carry a single durability point: the first survival
+use breaks them, and a spent rod is gone. There is no recharge cooldown —
+the consumed rod is the cost.
 
 ## Crafting
 
@@ -53,8 +55,9 @@ All 64 TNT and the rod are consumed; exactly one weapon rod is produced.
 3. The rod breaks, a warning sounds, and the strike lands after a short
    delay (10 ticks by default).
 
-Misses (no targeted block), cooldowns, and full strike queues give a chat
-message and never consume the rod.
+Misses (no targeted block) and full strike queues never consume the rod.
+The Orbital rod never prints chat messages; the Stab rod reports its
+target in chat as before.
 
 ## Commands (operator level 2)
 
@@ -72,22 +75,22 @@ message and never consume the rod.
 |---|---|---|
 | targetingRange | 200.0 | Max rod targeting distance (blocks) |
 | strikeDelayTicks | 10 | Launch delay after activation |
-| playerCooldownTicks | 100 | Per-player cooldown between strikes |
+| playerCooldownTicks | 0 | Per-player recharge, in ticks (0 = off; rods are single-use) |
 | maxActiveStrikes | 4 | Pending-strike queue cap |
-| nukePayloadLimit | 700 | TNT cap per nuke (669 = full pattern) |
+| nukePayloadLimit | 2000 | TNT cap per nuke (2000 = full pattern) |
 | nukeRingCount | 10 | Rings used (1–10, innermost first) |
 | nukeSpawnHeight | 72.0 | Drop height above target |
 | nukeFuseTicks | 79 | Nuke TNT fuse |
-| nukeMisalignRange | 0.5 | Per-charge scatter disc radius |
-| stabMaxSteps | 80 | Max stab column depth (steps) |
+| nukeMisalignRange | 2.0 | Per-charge scatter-disc radius |
+| nukeAngularJitter | 0.5 | Charge angle wander, fraction of one spacing (breaks clean circles) |
+| stabMaxSteps | 128 | Max stab column depth (steps; 96 covers a default world) |
 | stabTntPerStep | 5 | Charges per step |
 | stabStepSize | 4 | Blocks between groups |
 | stabVerticalOffset | 0.75 | Charge spacing inside a group |
 | stabFuseTicks | 1 | Stab TNT fuse |
-| blastResistanceStop | 1200.0 | Resistance that stops the drill |
-| terrainDestruction | true | Reserved: not enforced in 1.0.0 |
-| reduceBlockDrops | false | Reserved: not enforced in 1.0.0 |
-| consumeInCreative | false | Consume rods in creative mode |
+| terrainDestruction | true | Reserved: not enforced in 1.x |
+| reduceBlockDrops | false | Reserved: not enforced in 1.x |
+| consumeInCreative | false | Break rods in creative mode |
 
 Malformed files are quarantined as `callorbitalcannons.json.invalid` and
 safe defaults are used; out-of-range values are reset with a log warning.
@@ -101,11 +104,11 @@ safe defaults are used; out-of-range values are reset with a log warning.
 
 ## Server requirements and performance
 
-A full nuke spawns 669 live TNT entities and detonates them within
-seconds — expect a serious but bounded tick spike. See
+A full nuke spawns 2000 live TNT entities and a full stab column up to
+480 — expect a serious but bounded tick spike. See
 `docs/PERFORMANCE.md` for budgets, safeguards, and tuning advice before
 handing these rods to your players. On shared hardware, consider lowering
-`nukePayloadLimit`/`maxActiveStrikes` or raising `playerCooldownTicks`.
+`nukePayloadLimit`/`maxActiveStrikes`.
 
 ## What this is not
 

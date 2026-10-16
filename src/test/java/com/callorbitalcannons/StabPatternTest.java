@@ -11,13 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StabPatternTest {
     @Test
-    void defaultsMatchReferenceBaseline() {
-        assertEquals(5, StabPattern.START_OFFSET_ABOVE);
+    void defaultsMatchTunedBaseline() {
         assertEquals(4, StabPattern.STEP_SIZE);
         assertEquals(5, StabPattern.TNT_PER_STEP);
         assertEquals(0.75, StabPattern.VERTICAL_OFFSET, 1e-9);
         assertEquals(1, StabPattern.FUSE_TICKS);
-        assertEquals(1200.0f, StabPattern.STOP_RESISTANCE, 1e-6f);
     }
 
     @Test
@@ -32,28 +30,22 @@ class StabPatternTest {
     }
 
     @Test
-    void stoppingRuleMatchesBlastResistantBlocks() {
-        assertTrue(StabPattern.isStoppingBlock(1200.0f, 1200.0f));
-        assertTrue(StabPattern.isStoppingBlock(3600000.0f, 1200.0f));
-        assertFalse(StabPattern.isStoppingBlock(1199.9f, 1200.0f));
-        assertFalse(StabPattern.isStoppingBlock(6.0f, 1200.0f));
-    }
-
-    @Test
-    void columnStepsDescendInFourBlockIncrements() {
-        List<Integer> steps = StabPattern.columnSteps(69, -64, 4, 80);
+    void fullColumnSweepsBottomToTop() {
+        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 4, 128);
         assertFalse(steps.isEmpty());
-        assertEquals(69, steps.get(0));
+        assertEquals(-64, steps.get(0));
         for (int i = 1; i < steps.size(); i++) {
-            assertEquals(4, steps.get(i - 1) - steps.get(i));
+            assertEquals(4, steps.get(i) - steps.get(i - 1));
         }
-        assertTrue(steps.get(steps.size() - 1) >= -64);
+        assertTrue(steps.get(steps.size() - 1) <= 319);
+        assertEquals(96, steps.size());
+        assertEquals(480, StabPattern.countForSteps(steps.size(), 5));
     }
 
     @Test
     void maxStepsCapsColumnDepth() {
-        List<Integer> steps = StabPattern.columnSteps(100, -64, 4, 3);
-        assertEquals(List.of(100, 96, 92), steps);
+        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 4, 3);
+        assertEquals(List.of(-64, -60, -56), steps);
         assertEquals(15, StabPattern.countForSteps(steps.size(), 5));
     }
 }

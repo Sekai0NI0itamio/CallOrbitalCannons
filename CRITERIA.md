@@ -1,5 +1,14 @@
 # Criteria: CallOrbitalCannons
 
+## 1.1.0 (in-game feedback)
+- [ ] Nuke: 2000 payload, ring counts {45..352}, jitter + scatter defaults, ragged carpet
+- [ ] Stab: full bottom-to-top column at x/z, no blast-resistance stop
+- [ ] Rods spawn at 1 durability and break on first survival use
+- [ ] Cooldown default 0 (mechanism kept, disabled); nuke rod chat-silent
+- [ ] CI green on 1.1.0, JAR refreshed locally
+
+## 1.0.0 (all verified green on CI run 38901389959)
+
 - [x] `settings.gradle`, `build.gradle`, `gradle.properties` follow sibling (DuraPing) conventions: MC 1.21.1, yarn 1.21.1+build.3, loader 0.16.14, fabric-api 0.102.0+1.21.1, loom 1.7.4, Java 21
 - [x] `fabric.mod.json` present with id `callorbitalcannons`
 - [x] Orbital recipe matches ONLY: TNTx64 top-center + rod middle-center, rest empty; produces NUKE rod; consumes 64 TNT + 1 rod

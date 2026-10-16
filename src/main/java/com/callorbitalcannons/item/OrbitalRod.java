@@ -15,6 +15,9 @@ import net.minecraft.util.Formatting;
  * {@code CallOrbitalRod}/{@code Weapon} keys. Display names and the
  * enchantment glint are cosmetic only: validation checks item data, never
  * the name, so a renamed ordinary rod is always rejected.
+ *
+ * <p>Rods are struck with a single durability point, so the first survival
+ * use breaks them.
  */
 public final class OrbitalRod {
     private OrbitalRod() {
@@ -23,9 +26,10 @@ public final class OrbitalRod {
     public static final String ROD_KEY = "CallOrbitalRod";
     public static final String WEAPON_KEY = "Weapon";
 
-    /** Builds one weapon rod of {@code mode} with glint and display name. */
+    /** Builds one single-use weapon rod of {@code mode}. */
     public static ItemStack create(WeaponMode mode) {
         ItemStack rod = new ItemStack(Items.FISHING_ROD);
+        rod.setDamageValue(rod.getMaxDamage() - 1);
         rod.set(DataComponentTypes.CUSTOM_NAME,
                 Text.literal(mode.displayName()).formatted(Formatting.AQUA).formatted(Formatting.ITALIC));
         rod.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
