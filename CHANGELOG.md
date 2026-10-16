@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.1 — silent stab + config self-healing
+
+- Stab success chat message removed: both rods now fire silently (warning
+  sound only); rejections still report on the stab rod.
+- Configs carry a `configVersion` stamp (generation 2): pre-1.2.1 files
+  are backed up as `callorbitalcannons.json.v1.bak` and regenerated, so
+  stale 1.0.0-era values can never silently persist. Fixes the
+  in-game "stab stops at the aimed Y" report, which matches the 1.0.0
+  aim-downward sweep / stale depth exactly — no 1.1.x sweep behaves so.
+
 ## 1.2.0 — footage-matched rings + loaded-edge targeting
 
 - Nuke redistributed 602 → 539 TNT (rings

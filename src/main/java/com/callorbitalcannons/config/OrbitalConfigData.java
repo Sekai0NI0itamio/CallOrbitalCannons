@@ -1,5 +1,9 @@
 package com.callorbitalcannons.config;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +12,15 @@ import java.util.List;
  * {@link OrbitalConfig}; every rule here is unit tested without Minecraft.
  */
 public final class OrbitalConfigData {
+    /**
+     * Config generation stamp. Bumped whenever defaults change meaning
+     * (1.2.1 = generation 2); files without the stamp predate it and are
+     * backed up + regenerated on load instead of silently keeping stale
+     * gameplay values (e.g. a 1.0.0 stab depth on a full-column build).
+     */
+    public static final int CURRENT_CONFIG_VERSION = 2;
+
+    public int configVersion = CURRENT_CONFIG_VERSION;
     public double targetingRange = 200.0;
     public int strikeDelayTicks = 10;
     /** Zero disables the per-player recharge (rods are single-use anyway). */
@@ -56,6 +69,26 @@ public final class OrbitalConfigData {
             blastResistanceStop = 1200.0f;
         }
         return warnings;
+    }
+
+    /**
+     * True when a stored config file predates the current generation and
+     * must be backed up + regenerated: blank content, missing version
+     * stamp, or older generation. Malformed JSON returns false so the
+     * existing {@code .invalid} quarantine path keeps owning it.
+     */
+    public static boolean needsMigration(String json) {
+        if (json == null || json.isBlank()) {
+            return true;
+        }
+        final JsonObject root;
+        try {
+            root = JsonParser.parseString(json).getAsJsonObject();
+        } catch (JsonSyntaxException | IllegalStateException e) {
+            return false;
+        }
+        return !root.has("configVersion")
+                || root.get("configVersion").getAsInt() != CURRENT_CONFIG_VERSION;
     }
 
     private static int clampInt(List<String> warnings, String key, int value, int min, int max, int fallback) {

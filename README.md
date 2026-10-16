@@ -60,8 +60,8 @@ consume the rod. Aims past the loaded edge fall back to the last loaded
 voxel along the look ray — the nearest block position to what was aimed
 at — and do consume the rod; the world bottom/top clamp the fallback Y,
 so deep worlds (down to -64 and below) work.
-The Orbital rod never prints chat messages; the Stab rod reports its
-target in chat as before, noting edge-of-loaded-chunks approximations.
+Both rods fire silently in chat — only the warning sound plays; only
+rejections print, and only on the stab rod.
 
 ## Commands (operator level 2)
 
@@ -99,6 +99,10 @@ target in chat as before, noting edge-of-loaded-chunks approximations.
 
 Malformed files are quarantined as `callorbitalcannons.json.invalid` and
 safe defaults are used; out-of-range values are reset with a log warning.
+Files from before 1.2.1 carry no version stamp, so they are backed up as
+`callorbitalcannons.json.v1.bak` and regenerated — stale values from
+older releases (e.g. 1.0.0 stab depth) can never silently persist. Keep a
+single mod JAR in `mods/`; overlapping versions fight over the mod id.
 
 ## Installation
 

@@ -29,9 +29,10 @@ import java.util.Optional;
  * within the configured range, and schedules the strike server-side.
  *
  * <p>The rod breaks on a queued strike (single durability point, survival
- * only unless configured otherwise). Misses and rejected strikes never
- * consume it. The Orbital rod is fully silent in chat on every outcome —
- * only the warning sound plays; the Stab rod reports in chat as before.
+ * only unless configured otherwise). Clean misses inside loaded chunks
+ * and rejected strikes never consume it. Both rods fire silently in chat
+ * on success — only the warning sound plays; rejections still report in
+ * chat on the stab rod (the Orbital rod stays silent on every outcome).
  */
 public final class RodUseHandler {
     private RodUseHandler() {
@@ -57,7 +58,6 @@ public final class RodUseHandler {
         OrbitalConfigData config = OrbitalConfig.get();
         HitResult hit = player.raycast(config.targetingRange, 1.0f, false);
         BlockPos target;
-        boolean approximate = false;
         if (hit.getType() == HitResult.Type.BLOCK) {
             target = ((BlockHitResult) hit).getBlockPos();
         } else {
@@ -79,7 +79,6 @@ public final class RodUseHandler {
             }
             TargetRay.Target fallbackTarget = fallback.get();
             target = new BlockPos(fallbackTarget.x(), fallbackTarget.y(), fallbackTarget.z());
-            approximate = true;
         }
         if (!StrikeValidator.withinRange(player.getX(), player.getEyeY(), player.getZ(),
                 target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5, config.targetingRange + 1.0)) {
@@ -91,17 +90,10 @@ public final class RodUseHandler {
                 scheduler.schedule(serverWorld, target, mode, player.getUuid(), config);
         switch (result) {
             case QUEUED -> {
+                // Both rods fire silently in chat on success (warning sound
+                // only); errors still report via tell().
                 serverWorld.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.PLAYERS, 1.0f, 1.0f);
-                if (!silent) {
-                    var message = Text.literal("Stab shot inbound at ")
-                            .formatted(Formatting.GOLD)
-                            .append(Text.literal(target.toShortString()).formatted(Formatting.WHITE));
-                    if (approximate) {
-                        message.append(Text.literal(" (edge of loaded chunks)").formatted(Formatting.GRAY));
-                    }
-                    player.sendMessage(message, false);
-                }
                 breakRod(player, serverWorld, stack, config);
                 return TypedActionResult.consume(stack);
             }

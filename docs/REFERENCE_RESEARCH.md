@@ -153,12 +153,20 @@ above are arithmetic on those verbatim values
   bottom/top, covering deep worlds at -64 and below) instead of fizzling.
   A clean miss inside loaded territory still keeps the rod. This is new
   behavior with no reference counterpart.
-- **Stab stop-rule note (no code change).** The drill still halts after
+- **Stab stop-rule note (no sweep change).** The drill still halts after
   spawning on the first block with resistance ≥ 1200, exactly the
   reference rule — so a resistant layer at the aim (obsidian test
   platform, Nether ceiling, ancient debris) ends the column there and
-  nothing below is hit. Explosions "only above the aimed Y" with a full
-  column otherwise intact points at this rule firing, not at a sweep bug.
+  nothing below is hit.
+- **1.2.1 stab diagnosis: staleness, not a sweep bug.** In-game report
+  (superflat stone tower, aimed mid-tower, destruction only down to the
+  aim) matches the 1.0.0 sweep exactly (start at target + 5, downward) —
+  no 1.1.x sweep behaves that way. Two live staleness paths: a superseded
+  JAR still sitting in `mods/`, or a 1.0.0-era config whose in-range old
+  values (e.g. `stabMaxSteps` 80) survived validation. 1.2.1 closes the
+  second path: configs carry a `configVersion` stamp and pre-stamp files
+  are backed up + regenerated on load. Both rods are now chat-silent on
+  success (warning sound only).
 
 ## 8. Unverifiable behavior (explicit approximations)
 

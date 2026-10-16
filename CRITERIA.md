@@ -1,5 +1,9 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.1 (silent stab + config self-healing)
+- [ ] Stab success fully chat-silent; config version stamp migrates pre-1.2.1 files
+- [ ] CI green on 1.2.1, JAR refreshed locally
+
 ## 1.2.0 (footage-matched rings + loaded-edge targeting)
 - [x] Nuke 539 (rings {30,102,84,68,60,52,44,38,32,28}, radii 6..69 step 7, dense second ring, decreasing outward), cap 600; stab unchanged
 - [x] Raycast miss past loaded edge approximates last loaded voxel (Y clamped); clean miss keeps rod; stab chat notes approximation

@@ -16,6 +16,9 @@ import java.nio.file.StandardCopyOption;
  * Loads {@code config/callorbitalcannons.json}, creating defaults when the
  * file is missing and quarantining malformed files as
  * {@code callorbitalcannons.json.invalid} instead of overwriting them.
+ * Files predating the current config generation are backed up as
+ * {@code callorbitalcannons.json.v1.bak} and regenerated, so stale
+ * gameplay values from older releases can never silently persist.
  */
 public final class OrbitalConfig {
     public static final String MOD_ID = "callorbitalcannons";
@@ -49,6 +52,15 @@ public final class OrbitalConfig {
         }
         try {
             String json = Files.readString(path);
+            if (OrbitalConfigData.needsMigration(json)) {
+                LOG.warn("[CallOrbitalCannons] config predates generation {}, backing up and regenerating defaults.",
+                        OrbitalConfigData.CURRENT_CONFIG_VERSION);
+                Files.move(path, path.resolveSibling("callorbitalcannons.json.v1.bak"),
+                        StandardCopyOption.REPLACE_EXISTING);
+                instance = new OrbitalConfigData();
+                save();
+                return;
+            }
             OrbitalConfigData parsed = GSON.fromJson(json, OrbitalConfigData.class);
             if (parsed == null) {
                 throw new JsonParseException("config parsed to null");

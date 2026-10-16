@@ -5,6 +5,7 @@ import com.callorbitalcannons.item.WeaponMode;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,6 +52,37 @@ class ConfigAndModeTest {
         assertEquals(0.5, data.nukeAngularJitter, 1e-9);
         assertEquals(64, data.stabMaxSteps);
         assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
+    }
+
+    @Test
+    void freshDefaultsCarryCurrentVersion() {
+        assertEquals(OrbitalConfigData.CURRENT_CONFIG_VERSION, new OrbitalConfigData().configVersion);
+    }
+
+    @Test
+    void preStampConfigNeedsMigration() {
+        // 1.0.0-era file: no version stamp, stale stab depth.
+        assertTrue(OrbitalConfigData.needsMigration(
+                "{\"targetingRange\":200.0,\"stabMaxSteps\":80,\"stabStepSize\":4}"));
+    }
+
+    @Test
+    void currentStampedConfigNeedsNoMigration() {
+        assertFalse(OrbitalConfigData.needsMigration(
+                "{\"configVersion\":" + OrbitalConfigData.CURRENT_CONFIG_VERSION + ",\"stabMaxSteps\":64}"));
+    }
+
+    @Test
+    void olderStampNeedsMigration() {
+        assertTrue(OrbitalConfigData.needsMigration(null));
+        assertTrue(OrbitalConfigData.needsMigration(""));
+        assertTrue(OrbitalConfigData.needsMigration(
+                "{\"configVersion\":" + (OrbitalConfigData.CURRENT_CONFIG_VERSION - 1) + "}"));
+    }
+
+    @Test
+    void malformedJsonStaysOnInvalidPath() {
+        assertFalse(OrbitalConfigData.needsMigration("{not json"));
     }
 
     @Test
