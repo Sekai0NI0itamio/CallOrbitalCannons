@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.5 — 11-ring formation: uniform 100-charge rings, 1101 TNT
+
+- Nuke reshaped to the manually counted reference formation: 1 center
+  charge + 11 rings of 100 charges each = 1101 TNT (was 225), on radii
+  {6.0, 9.4, …, 40.0} (uniform 3.4-block gaps; was 7-block, 6–48).
+- Count derived mathematically from the observed outer-ring gaps:
+  circumference 2π×40 ≈ 251 blocks over ~2.5-block charge spacing
+  (1–2-block visible gaps) → 100 charges on the outermost ring, reused
+  for every ring. Uniform count → inner rings pack solid, outer fringe
+  reads pointillist.
+- Defaults updated: `nukeRingCount` 7 → 11, `nukePayloadLimit` 250 →
+  1200 (still above the 1101 baseline); config generation stamp 2 → 3,
+  so stored 1.2.x configs are backed up + regenerated on load.
+
 ## 1.2.4 — match Wemmbbu formation: 7 rings, 225 TNT, tighter
 
 - Nuke reshaped to the Wemmbbu reference formation: 1 center charge +

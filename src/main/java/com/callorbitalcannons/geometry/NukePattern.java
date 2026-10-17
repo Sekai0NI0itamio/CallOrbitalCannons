@@ -5,18 +5,20 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Nuke (Orbital) Shot geometry: one stationary center charge plus seven
+ * Nuke (Orbital) Shot geometry: one stationary center charge plus eleven
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.4 behavior, tightened per screenshot feedback (too big / too many
- * TNT / too unorganized): a 225-charge pattern over radii 6..48 — one
- * center charge plus seven rings whose charges grow by 8 per ring
- * ({@code 8, 16, 24, 32, 40, 48, 56}), on uniform 7-block ring gaps so the
- * bands stay visually separated. Angular jitter and scatter defaults are
- * lower and the per-ring messiness ramp is capped at 0.1–0.2 (~80-95%
- * circular even on the outer fringe), so every ring stays clearly circular
- * rather than an unorganized carpet. Counts, jitter, and scatter are all
+ * <p>1.2.5 behavior, shaped to the manually counted Wemmbbu formation
+ * (11 rings, 3.4-block ring gaps, equal charges on every ring): a
+ * 1101-charge pattern over radii 6.0..40.0 — one center charge plus eleven
+ * rings of 100 charges each. The uniform per-ring count is derived from the
+ * outermost ring: circumference 2π×40 ≈ 251 blocks over the observed
+ * 2.5-block charge spacing (1–2-block visible gaps) ≈ 100. Because the
+ * circumference grows outward while the count stays fixed, inner rings read
+ * solid while the outer fringe sits pointillist (~2.5 blocks apart).
+ * Angular jitter and scatter are scaled per ring and kept low (~80-95%
+ * circular even on the outer fringe). Counts, jitter, and scatter are all
  * configurable; see docs/REFERENCE_RESEARCH.md for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
@@ -26,15 +28,17 @@ public final class NukePattern {
     private NukePattern() {
     }
 
-    /** Ring radii in blocks, innermost first (uniform 7-block gaps). */
-    public static final double[] RING_RADII = {6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0};
+    /** Ring radii in blocks, innermost first (uniform 3.4-block gaps). */
+    public static final double[] RING_RADII = {6.0, 9.4, 12.8, 16.2, 19.6, 23.0, 26.4, 29.8, 33.2, 36.6, 40.0};
 
     /**
-     * Charges per ring. Sums to 224 ring charges; plus the center charge
-     * each strike uses 225 TNT — charges grow by 8 per ring outward
-     * ({@code 8, 16, 24, 32, 40, 48, 56}).
+     * Charges per ring. Sums to 1100 ring charges; plus the center charge
+     * each strike uses 1101 TNT. Every ring carries the same 100 charges —
+     * the outermost-ring count derived from the observed 1–2 block charge
+     * gaps (2π×40.0 / 2.5 ≈ 100) — so inner rings pack solid and the outer
+     * fringe reads pointillist.
      */
-    public static final int[] RING_COUNTS = {8, 16, 24, 32, 40, 48, 56};
+    public static final int[] RING_COUNTS = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;

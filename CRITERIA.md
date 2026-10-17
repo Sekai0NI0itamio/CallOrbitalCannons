@@ -1,10 +1,15 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.5 (11-ring uniform formation)
+
+- [ ] Nuke 1101 TNT (center + 11 rings × 100, radii 6.0..40.0 step 3.4), cap 1200, ringCount 11; config generation 2 → 3
+- [ ] CI green on 1.2.5; JAR artifact on run (Downloads copy blocked by sandbox write rule)
+
 ## 1.2.4 (match Wemmbbu formation: 7 rings, 225 TNT, tighter)
 
-- [ ] Nuke 225 TNT (center + rings {8,16,24,32,40,48,56}, radii 6..48 step 7, charges +8 per ring outward), cap 250
-- [ ] Nuke rings ~80-95% circular everywhere incl. outer fringe; per-ring messiness cap 0.2; defaults jitter 0.2 / scatter 1.0
-- [ ] CI green on 1.2.4; JAR artifact on run (Downloads copy blocked by sandbox write rule)
+- [x] Nuke 225 TNT (center + rings {8,16,24,32,40,48,56}, radii 6..48 step 7, charges +8 per ring outward), cap 250
+- [x] Nuke rings ~80-95% circular everywhere incl. outer fringe; per-ring messiness cap 0.2; defaults jitter 0.2 / scatter 1.0
+- [x] CI green on 1.2.4 (run 39034413098); JAR 1.2.4 + sources downloaded to project folder
 
 ## 1.2.3 (stab every 2 blocks / 1 TNT; nuke rings stay circular)
 - [x] Stab 1 TNT every 2 blocks down full column (maxSteps 192), blast stop unchanged

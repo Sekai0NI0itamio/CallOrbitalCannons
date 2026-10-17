@@ -187,3 +187,9 @@ above are arithmetic on those verbatim values
 - **Nuke reshaped to the Wemmbbu reference formation per screenshot feedback:** 1 center charge + 7 rings of {8, 16, 24, 32, 40, 48, 56} = 225 TNT (was 539), on radii {6, 13, …, 48} uniform 7-block gaps (was 6–69), footprint ~96 blocks (was ~140). Charges grow by 8 per ring outward; the previous strictly-decreasing distribution (1.2.0) is replaced by this growing formation because it matches the inspected reference render.
 - **Nuke defaults tightened:** `nukePayloadLimit` 600 → 250 (above the 225 baseline), `nukeRingCount` 10 → 7, `nukeMisalignRange` 1.5 → 1.0, `nukeAngularJitter` 0.3 → 0.2; per-ring messiness ramp capped at 0.1–0.2 (~80-95% circular even on the outer fringe).
 - Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance stop ≥ 1200).
+
+## 10. 1.2.5 deviations (11-ring uniform formation)
+
+- **Nuke reshaped to the manually counted reference formation:** 1 center charge + 11 rings of 100 charges each = 1101 TNT (was 225), on radii {6.0, 9.4, …, 40.0} uniform 3.4-block gaps (was 7-block, 6–48), ~80-block footprint (was ~96). The uniform per-ring count was derived from the observed outer-ring spacing: circumference 2π×40 ≈ 251 blocks over ~2.5-block charge spacing (1–2-block visible gaps) gives 100 charges on the outermost ring, reused for every ring — so inner rings pack solid and the outer fringe reads pointillist.
+- **Defaults updated:** `nukeRingCount` 7 → 11, `nukePayloadLimit` 250 → 1200 (above the 1101 baseline); config generation stamp 2 → 3 so stored 1.2.x configs are backed up + regenerated on load.
+- Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance stop ≥ 1200).

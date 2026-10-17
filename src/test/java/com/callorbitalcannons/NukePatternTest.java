@@ -13,43 +13,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NukePatternTest {
     @Test
     void ringRadiiAreDocumentedBaseline() {
-        assertArrayEquals(new double[]{6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0},
+        assertArrayEquals(new double[]{6.0, 9.4, 12.8, 16.2, 19.6, 23.0, 26.4, 29.8, 33.2, 36.6, 40.0},
                 NukePattern.RING_RADII, 1e-9);
     }
 
     @Test
-    void ringGapsAreWideAndUniform() {
+    void ringGapsAreUniform() {
         for (int i = 1; i < NukePattern.RING_RADII.length; i++) {
-            assertEquals(7.0, NukePattern.RING_RADII[i] - NukePattern.RING_RADII[i - 1], 1e-9);
+            assertEquals(3.4, NukePattern.RING_RADII[i] - NukePattern.RING_RADII[i - 1], 1e-6);
         }
     }
 
     @Test
-    void ringCountsGiveThinnedPayload() {
-        assertArrayEquals(new int[]{8, 16, 24, 32, 40, 48, 56}, NukePattern.RING_COUNTS);
+    void ringCountsMatchDocumentedBaseline() {
+        assertArrayEquals(new int[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+                NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchTwoTwentyFiveBaseline() {
-        assertEquals(224, NukePattern.ringTotal());
-        assertEquals(225, NukePattern.totalPayload());
+    void ringTotalsMatchElevenHundredOneBaseline() {
+        assertEquals(1100, NukePattern.ringTotal());
+        assertEquals(1101, NukePattern.totalPayload());
     }
 
     @Test
-    void ringCountsGrowByEightOutward() {
+    void ringCountsAreUniformWithWideningSpacing() {
         int[] counts = NukePattern.RING_COUNTS;
         for (int i = 0; i < counts.length; i++) {
-            assertEquals(8 * (i + 1), counts[i], "ring " + i + " should have 8*(i+1) charges");
+            assertEquals(100, counts[i], "ring " + i + " should carry the uniform ring count");
         }
-        // Charge spacing grows progressively wider outward (circumference
-        // outruns the +8-per-ring charge growth), matching the
-        // pointillist outer rings described in the reference footage.
+        // Circumference grows linearly outward while the count stays fixed,
+        // so spacing widens outward: solid inner rings, pointillist outer.
         double[] radii = NukePattern.RING_RADII;
         double prevSpacing = -1.0;
         for (int i = 0; i < counts.length; i++) {
             double spacing = 2.0 * Math.PI * radii[i] / counts[i];
-            assertTrue(spacing >= prevSpacing - 1e-9,
-                    "ring " + i + " spacing " + spacing + " should not narrow vs previous " + prevSpacing);
+            assertTrue(spacing > prevSpacing,
+                    "ring " + i + " spacing " + spacing + " should widen vs previous " + prevSpacing);
             prevSpacing = spacing;
         }
     }

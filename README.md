@@ -15,7 +15,7 @@ approximated, and where this mod differs.
 
 | Rod | Strike | Effect |
 |---|---|---|
-| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 225 TNT (lone center + 7 rings, radii 6–48, charges growing by 8 per ring outward on 7-block gaps) fall from 72 blocks up across a ~96-block footprint. Fires silently in chat — only the warning sound plays |
+| Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 1101 TNT (lone center + 11 rings of 100 charges each, radii 6.0–40.0 on uniform 3.4-block gaps) fall from 72 blocks up across a ~80-block footprint — inner rings read solid, the outer fringe sits ~2.5 blocks apart. Fires silently in chat — only the warning sound plays |
 | Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down with 1 TNT every 2 blocks and 1-tick fuses (up to 192 charges) — stops at the first blast-resistant block (≥ 1200) |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
@@ -62,7 +62,7 @@ at — and do consume the rod; the world bottom/top clamp the fallback Y,
 so deep worlds (down to -64 and below) work.
 Both rods fire silently in chat — only the warning sound plays; only
 rejections print, and only on the stab rod.
-Nuke rings stay ~70-90% circular everywhere, including the outer fringe — only lightly scattered, never unorganized.
+Nuke rings stay ~80-95% circular everywhere, including the outer fringe — only lightly scattered, never unorganized.
 
 ## Commands (operator level 2)
 
@@ -82,8 +82,8 @@ Nuke rings stay ~70-90% circular everywhere, including the outer fringe — only
 | strikeDelayTicks | 10 | Launch delay after activation |
 | playerCooldownTicks | 0 | Per-player recharge, in ticks (0 = off; rods are single-use) |
 | maxActiveStrikes | 4 | Pending-strike queue cap |
-| nukePayloadLimit | 250 | TNT cap per nuke (225 = full pattern) |
-| nukeRingCount | 7 | Rings used (1–7, innermost first) |
+| nukePayloadLimit | 1200 | TNT cap per nuke (1101 = full pattern) |
+| nukeRingCount | 11 | Rings used (1–11, innermost first) |
 | nukeSpawnHeight | 72.0 | Drop height above target |
 | nukeFuseTicks | 79 | Nuke TNT fuse |
 | nukeMisalignRange | 1.0 | Per-charge scatter-disc radius; applied fully to the outermost ring, scaled down toward the inner rings so they stay circular |
@@ -100,10 +100,12 @@ Nuke rings stay ~70-90% circular everywhere, including the outer fringe — only
 
 Malformed files are quarantined as `callorbitalcannons.json.invalid` and
 safe defaults are used; out-of-range values are reset with a log warning.
-Files from before 1.2.1 carry no version stamp, so they are backed up as
+Configs from before the current generation (1.2.5 = generation 3; 1.2.1–1.2.4
+were generation 2, earlier files carried no stamp) are backed up as
 `callorbitalcannons.json.v1.bak` and regenerated — stale values from
-older releases (e.g. 1.0.0 stab depth) can never silently persist. Keep a
-single mod JAR in `mods/`; overlapping versions fight over the mod id.
+older releases (e.g. a 1.2.4 seven-ring nuke, or 1.0.0 stab depth) can
+never silently persist. Keep a single mod JAR in `mods/`; overlapping
+versions fight over the mod id.
 
 ## Installation
 
@@ -114,7 +116,7 @@ single mod JAR in `mods/`; overlapping versions fight over the mod id.
 
 ## Server requirements and performance
 
-A full nuke spawns 225 live TNT entities and a full stab column up to
+A full nuke spawns 1101 live TNT entities and a full stab column up to
 192 — expect a serious but bounded tick spike. See
 `docs/PERFORMANCE.md` for budgets, safeguards, and tuning advice before
 handing these rods to your players. On shared hardware, consider lowering
