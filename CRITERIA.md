@@ -2,8 +2,8 @@
 
 ## 1.2.5 (11-ring uniform formation)
 
-- [ ] Nuke 1101 TNT (center + 11 rings × 100, radii 6.0..40.0 step 3.4), cap 1200, ringCount 11; config generation 2 → 3
-- [ ] CI green on 1.2.5; JAR artifact on run (Downloads copy blocked by sandbox write rule)
+- [x] Nuke 1101 TNT (center + 11 rings × 100, radii 6.0..40.0 step 3.4), cap 1200, ringCount 11; config generation 2 → 3
+- [x] CI green on 1.2.5 (run 39038310309); JAR 1.2.5 + sources downloaded to project folder
 
 ## 1.2.4 (match Wemmbbu formation: 7 rings, 225 TNT, tighter)
 
