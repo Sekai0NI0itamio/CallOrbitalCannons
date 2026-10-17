@@ -30,9 +30,9 @@ public final class OrbitalConfigData {
     public int nukeRingCount = 10;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
-    public double nukeMisalignRange = 2.0;
+    public double nukeMisalignRange = 1.5;
     /** Per-charge angular wander, as a fraction of one charge spacing. */
-    public double nukeAngularJitter = 0.5;
+    public double nukeAngularJitter = 0.3;
     public int stabMaxSteps = 64;
     public int stabTntPerStep = 3;
     public int stabStepSize = 8;
@@ -57,8 +57,8 @@ public final class OrbitalConfigData {
         nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
-        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 2.0);
-        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.5);
+        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 1.5);
+        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.3);
         stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 64);
         stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 3);
         stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 8);

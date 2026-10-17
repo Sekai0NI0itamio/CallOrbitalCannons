@@ -56,8 +56,8 @@ class NukePatternTest {
     void defaultsMatchTunedBaseline() {
         assertEquals(72.0, NukePattern.SPAWN_HEIGHT, 1e-9);
         assertEquals(79, NukePattern.FUSE_TICKS);
-        assertEquals(2.0, NukePattern.MISALIGN_RANGE, 1e-9);
-        assertEquals(0.5, NukePattern.ANGULAR_JITTER, 1e-9);
+        assertEquals(1.5, NukePattern.MISALIGN_RANGE, 1e-9);
+        assertEquals(0.3, NukePattern.ANGULAR_JITTER, 1e-9);
         assertEquals(0.98, NukePattern.DRAG, 1e-9);
     }
 
