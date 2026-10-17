@@ -1,5 +1,11 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.4 (match Wemmbbu formation: 7 rings, 225 TNT, tighter)
+
+- [ ] Nuke 225 TNT (center + rings {8,16,24,32,40,48,56}, radii 6..48 step 7, charges +8 per ring outward), cap 250
+- [ ] Nuke rings ~80-95% circular everywhere incl. outer fringe; per-ring messiness cap 0.2; defaults jitter 0.2 / scatter 1.0
+- [ ] CI green on 1.2.4; JAR artifact on run (Downloads copy blocked by sandbox write rule)
+
 ## 1.2.3 (stab every 2 blocks / 1 TNT; nuke rings stay circular)
 - [x] Stab 1 TNT every 2 blocks down full column (maxSteps 192), blast stop unchanged
 - [x] Nuke rings ~70-90% circular everywhere incl. outer fringe; per-ring messiness cap 0.3

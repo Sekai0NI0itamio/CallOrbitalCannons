@@ -26,13 +26,13 @@ public final class OrbitalConfigData {
     /** Zero disables the per-player recharge (rods are single-use anyway). */
     public long playerCooldownTicks = 0;
     public int maxActiveStrikes = 4;
-    public int nukePayloadLimit = 600;
-    public int nukeRingCount = 10;
+    public int nukePayloadLimit = 250;
+    public int nukeRingCount = 7;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
-    public double nukeMisalignRange = 1.5;
+    public double nukeMisalignRange = 1.0;
     /** Per-charge angular wander, as a fraction of one charge spacing. */
-    public double nukeAngularJitter = 0.3;
+    public double nukeAngularJitter = 0.2;
     public int stabMaxSteps = 192;
     public int stabTntPerStep = 1;
     public int stabStepSize = 2;
@@ -53,12 +53,12 @@ public final class OrbitalConfigData {
         strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
         playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 0);
         maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
-        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 600);
-        nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 250);
+        nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 7, 7);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
-        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 1.5);
-        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.3);
+        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 1.0);
+        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.2);
         stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 192);
         stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 1);
         stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 2);

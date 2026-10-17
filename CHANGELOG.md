@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.4 — match Wemmbbu formation: 7 rings, 225 TNT, tighter
+
+- Nuke reshaped to the Wemmbbu reference formation: 1 center charge +
+  7 rings of {8, 16, 24, 32, 40, 48, 56} = 225 TNT (was 539) on radii
+  {6, 13, …, 48} (was 6–69), uniform 7-block gaps so bands stay separated
+  on a ~96-block footprint (was ~140).
+- Nuke defaults tightened: `nukePayloadLimit` 600 → 250 (still above the
+  225 baseline), `nukeRingCount` 10 → 7, `nukeMisalignRange` 1.5 → 1.0,
+  `nukeAngularJitter` 0.3 → 0.2; per-ring messiness ramp capped at
+  0.1–0.2 (~80-95% circular even on the outer fringe) so rings stay
+  clearly circular rather than an unorganized carpet.
+
 ## 1.2.3 — stab every 2 blocks / 1 TNT; nuke rings stay circular
 
 - Stab drill thinned to 1 TNT charge every 2 blocks down the full column

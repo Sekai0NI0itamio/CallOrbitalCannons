@@ -5,19 +5,19 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Nuke (Orbital) Shot geometry: one stationary center charge plus ten
+ * Nuke (Orbital) Shot geometry: one stationary center charge plus seven
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.3 behavior, measured against Wemmbbu cannon footage (lone
- * center charge, dense second ring, sparse outer rings, wide gaps between
- * rings): a 539-charge pattern over radii 6..69 — one moderate inner ring,
- * a dense second ring, then strictly decreasing counts outward, on uniform
- * 7-block ring gaps so the bands stay visually separated. Angular jitter
- * and scatter are scaled per ring and kept low (~70-90% circular even on
- * the outer fringe), so every ring stays clearly circular with only a
- * light scatter rather than an unorganized carpet. Counts, jitter, and
- * scatter are all configurable; see docs/REFERENCE_RESEARCH.md for provenance.
+ * <p>1.2.4 behavior, tightened per screenshot feedback (too big / too many
+ * TNT / too unorganized): a 225-charge pattern over radii 6..48 — one
+ * center charge plus seven rings whose charges grow by 8 per ring
+ * ({@code 8, 16, 24, 32, 40, 48, 56}), on uniform 7-block ring gaps so the
+ * bands stay visually separated. Angular jitter and scatter defaults are
+ * lower and the per-ring messiness ramp is capped at 0.1–0.2 (~80-95%
+ * circular even on the outer fringe), so every ring stays clearly circular
+ * rather than an unorganized carpet. Counts, jitter, and scatter are all
+ * configurable; see docs/REFERENCE_RESEARCH.md for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -27,15 +27,14 @@ public final class NukePattern {
     }
 
     /** Ring radii in blocks, innermost first (uniform 7-block gaps). */
-    public static final double[] RING_RADII = {6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0, 55.0, 62.0, 69.0};
+    public static final double[] RING_RADII = {6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0};
 
     /**
-     * Charges per ring. Sums to 538 ring charges; plus the center charge
-     * each strike uses 539 TNT — a dense-inner / sparse-outer distribution:
-     * moderate inner ring, densest second ring, then strictly decreasing
-     * outward (footage-matched 1.2.0, replacing the backwards 1.1.2 growth).
+     * Charges per ring. Sums to 224 ring charges; plus the center charge
+     * each strike uses 225 TNT — charges grow by 8 per ring outward
+     * ({@code 8, 16, 24, 32, 40, 48, 56}).
      */
-    public static final int[] RING_COUNTS = {30, 102, 84, 68, 60, 52, 44, 38, 32, 28};
+    public static final int[] RING_COUNTS = {8, 16, 24, 32, 40, 48, 56};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;
@@ -47,14 +46,14 @@ public final class NukePattern {
     public static final double DRAG = 0.98;
 
     /** Default scatter-disc radius per charge, in blocks (applied fully to the outermost ring; scaled down for inner rings). */
-    public static final double MISALIGN_RANGE = 1.5;
+    public static final double MISALIGN_RANGE = 1.0;
 
     /**
      * Default angular jitter as a fraction of one charge spacing (applied fully to the outermost ring;
      * scaled down for inner rings). Each charge's angle wanders up to ± this fraction of the even
      * spacing, which breaks up the perfect-circle look.
      */
-    public static final double ANGULAR_JITTER = 0.3;
+    public static final double ANGULAR_JITTER = 0.2;
 
     /** Placement of one ring charge relative to the target center. */
     public record Placement(double dx, double dz, double vx, double vz) {
@@ -119,11 +118,11 @@ public final class NukePattern {
         for (int i = 0; i < radii.length; i++) {
             double baseRadius = radii[i];
             int tntCount = counts[i];
-            // Rings stay mostly circular everywhere (~70-90%): a slight
+            // Rings stay mostly circular everywhere (~80-95%): a slight
             // upward ramp toward the outer fringe keeps bands clean but
             // not rigid, so even the last rings are just lightly scattered.
             double ringProgress = radii.length == 1 ? 0.0 : (double) i / (radii.length - 1);
-            double messiness = 0.1 + 0.2 * ringProgress;
+            double messiness = 0.1 + 0.1 * ringProgress;
             double ringJitter = angularJitter * messiness;
             double ringMisalign = misalign * messiness;
             double spacing = (2.0 * Math.PI) / tntCount;

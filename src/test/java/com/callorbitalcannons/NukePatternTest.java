@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NukePatternTest {
     @Test
     void ringRadiiAreDocumentedBaseline() {
-        assertArrayEquals(new double[]{6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0, 55.0, 62.0, 69.0},
+        assertArrayEquals(new double[]{6.0, 13.0, 20.0, 27.0, 34.0, 41.0, 48.0},
                 NukePattern.RING_RADII, 1e-9);
     }
 
@@ -26,29 +26,31 @@ class NukePatternTest {
 
     @Test
     void ringCountsGiveThinnedPayload() {
-        assertArrayEquals(new int[]{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}, NukePattern.RING_COUNTS);
+        assertArrayEquals(new int[]{8, 16, 24, 32, 40, 48, 56}, NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchFiveThirtyNineBaseline() {
-        assertEquals(538, NukePattern.ringTotal());
-        assertEquals(539, NukePattern.totalPayload());
+    void ringTotalsMatchTwoTwentyFiveBaseline() {
+        assertEquals(224, NukePattern.ringTotal());
+        assertEquals(225, NukePattern.totalPayload());
     }
 
     @Test
-    void secondRingIsDensestThenDecreasingOutward() {
+    void ringCountsGrowByEightOutward() {
         int[] counts = NukePattern.RING_COUNTS;
-        double[] radii = NukePattern.RING_RADII;
-        double secondSpacing = 2.0 * Math.PI * radii[1] / counts[1];
         for (int i = 0; i < counts.length; i++) {
-            if (i == 1) {
-                continue;
-            }
-            double spacing = 2.0 * Math.PI * radii[i] / counts[i];
-            assertTrue(spacing > secondSpacing, "ring " + i + " should be sparser than ring 1");
+            assertEquals(8 * (i + 1), counts[i], "ring " + i + " should have 8*(i+1) charges");
         }
-        for (int i = 2; i < counts.length; i++) {
-            assertTrue(counts[i] < counts[i - 1], "ring " + i + " should be sparser than ring " + (i - 1));
+        // Charge spacing grows progressively wider outward (circumference
+        // outruns the +8-per-ring charge growth), matching the
+        // pointillist outer rings described in the reference footage.
+        double[] radii = NukePattern.RING_RADII;
+        double prevSpacing = -1.0;
+        for (int i = 0; i < counts.length; i++) {
+            double spacing = 2.0 * Math.PI * radii[i] / counts[i];
+            assertTrue(spacing >= prevSpacing - 1e-9,
+                    "ring " + i + " spacing " + spacing + " should not narrow vs previous " + prevSpacing);
+            prevSpacing = spacing;
         }
     }
 
@@ -56,8 +58,8 @@ class NukePatternTest {
     void defaultsMatchTunedBaseline() {
         assertEquals(72.0, NukePattern.SPAWN_HEIGHT, 1e-9);
         assertEquals(79, NukePattern.FUSE_TICKS);
-        assertEquals(1.5, NukePattern.MISALIGN_RANGE, 1e-9);
-        assertEquals(0.3, NukePattern.ANGULAR_JITTER, 1e-9);
+        assertEquals(1.0, NukePattern.MISALIGN_RANGE, 1e-9);
+        assertEquals(0.2, NukePattern.ANGULAR_JITTER, 1e-9);
         assertEquals(0.98, NukePattern.DRAG, 1e-9);
     }
 

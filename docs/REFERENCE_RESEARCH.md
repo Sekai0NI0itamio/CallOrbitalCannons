@@ -181,3 +181,9 @@ above are arithmetic on those verbatim values
 - Video-derived timings or accelerator mechanics (none extracted).
 - Client render performance and server TPS under a full strike (no
   runtime measurement in CI; see `docs/PERFORMANCE.md`).
+
+## 9. 1.2.4 deviations (Wemmbbu formation match)
+
+- **Nuke reshaped to the Wemmbbu reference formation per screenshot feedback:** 1 center charge + 7 rings of {8, 16, 24, 32, 40, 48, 56} = 225 TNT (was 539), on radii {6, 13, …, 48} uniform 7-block gaps (was 6–69), footprint ~96 blocks (was ~140). Charges grow by 8 per ring outward; the previous strictly-decreasing distribution (1.2.0) is replaced by this growing formation because it matches the inspected reference render.
+- **Nuke defaults tightened:** `nukePayloadLimit` 600 → 250 (above the 225 baseline), `nukeRingCount` 10 → 7, `nukeMisalignRange` 1.5 → 1.0, `nukeAngularJitter` 0.3 → 0.2; per-ring messiness ramp capped at 0.1–0.2 (~80-95% circular even on the outer fringe).
+- Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance stop ≥ 1200).
