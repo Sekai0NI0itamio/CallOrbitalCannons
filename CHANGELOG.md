@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.2 — circular nuke rings with a ragged outer fringe
+
+- Nuke rings now stay very circular inward and only get ragged toward the
+  outer fringe: angular jitter (0.3) and scatter (1.5) are applied fully
+  to the outermost ring and scaled down per-ring toward the center, so the
+  inner bands hold clean circles instead of an unorganized carpet.
+  Jitter/scatter defaults changed (0.5/2.0 → 0.3/1.5) because they are now
+  outer-ring maxima.
+
 ## 1.2.1 — silent stab + config self-healing
 
 - Stab success chat message removed: both rods now fire silently (warning

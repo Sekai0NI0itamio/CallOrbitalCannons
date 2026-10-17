@@ -143,10 +143,13 @@ above are arithmetic on those verbatim values
   backwards against this. Ring counts are now
   `{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}` (538 + center = 539) on
   uniform 7-block radii `{6, 13, …, 69}` (was 5-block `{6, 11, …, 51}`),
-  so each band stays visually separated under the kept 2.0 scatter and
-  0.5 angular jitter. Per-ring charge counts remain an eyeballed
-  approximation of the footage, not a measured recreation; the payload
-  cap default tightens 650 → 600 (still above the 539 baseline).
+  so each band stays visually separated. Angular jitter (default 0.3) and
+  scatter (default 1.5) are applied fully to the outermost ring and scaled
+  down toward the inner rings, so the inner bands stay very circular and
+  only the outer fringe gets ragged — the 1.2.x full-value jitter on every
+  ring made the pattern look unorganized. Per-ring charge counts remain an
+  eyeballed approximation of the footage, not a measured recreation; the
+  payload cap default tightens 650 → 600 (still above the 539 baseline).
 - **Rod targeting falls back to the loaded edge.** Vanilla raycast misses
   past loaded chunks, so aims beyond the loaded edge now approximate the
   last loaded voxel along the look ray (Y clamped to the live world

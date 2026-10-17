@@ -62,6 +62,7 @@ at — and do consume the rod; the world bottom/top clamp the fallback Y,
 so deep worlds (down to -64 and below) work.
 Both rods fire silently in chat — only the warning sound plays; only
 rejections print, and only on the stab rod.
+Nuke rings stay very circular inward and only get ragged toward the outer fringe.
 
 ## Commands (operator level 2)
 
@@ -85,8 +86,8 @@ rejections print, and only on the stab rod.
 | nukeRingCount | 10 | Rings used (1–10, innermost first) |
 | nukeSpawnHeight | 72.0 | Drop height above target |
 | nukeFuseTicks | 79 | Nuke TNT fuse |
-| nukeMisalignRange | 2.0 | Per-charge scatter-disc radius |
-| nukeAngularJitter | 0.5 | Charge angle wander, fraction of one spacing (breaks clean circles) |
+| nukeMisalignRange | 1.5 | Per-charge scatter-disc radius; applied fully to the outermost ring, scaled down toward the inner rings so they stay circular |
+| nukeAngularJitter | 0.3 | Charge angle wander, fraction of one spacing (breaks clean circles); applied fully to the outermost ring, scaled down toward the inner rings |
 | stabMaxSteps | 64 | Max stab column depth (steps; 48 covers a default world) |
 | stabTntPerStep | 3 | Charges per step |
 | stabStepSize | 8 | Blocks between groups |

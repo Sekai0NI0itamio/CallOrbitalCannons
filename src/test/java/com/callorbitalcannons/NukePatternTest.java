@@ -135,6 +135,34 @@ class NukePatternTest {
     }
 
     @Test
+    void innerRingsStayTighterThanOuterRings() {
+        List<NukePattern.Placement> placements = NukePattern.generatePlacements(new Random(42),
+                NukePattern.RING_RADII, NukePattern.RING_COUNTS,
+                NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS, NukePattern.ANGULAR_JITTER);
+        int cursor = 0;
+        double[] rmsDev = new double[NukePattern.RING_RADII.length];
+        for (int ring = 0; ring < NukePattern.RING_RADII.length; ring++) {
+            double base = NukePattern.RING_RADII[ring];
+            double sumSq = 0.0;
+            for (int j = 0; j < NukePattern.RING_COUNTS[ring]; j++) {
+                NukePattern.Placement p = placements.get(cursor++);
+                double r = Math.hypot(p.dx(), p.dz());
+                double d = r - base;
+                sumSq += d * d;
+            }
+            rmsDev[ring] = Math.sqrt(sumSq / NukePattern.RING_COUNTS[ring]);
+        }
+        // Innermost ring should be markedly tighter than the outermost ring.
+        assertTrue(rmsDev[0] < rmsDev[rmsDev.length - 1] * 0.6,
+                "inner ring rms deviation " + rmsDev[0] + " not tighter than outer " + rmsDev[rmsDev.length - 1]);
+        // Messiness should grow monotonically outward on average.
+        for (int i = 1; i < rmsDev.length; i++) {
+            assertTrue(rmsDev[i] >= rmsDev[i - 1] * 0.9,
+                    "messiness should not decrease from ring " + (i - 1) + " to " + i);
+        }
+    }
+
+    @Test
     void angularJitterBreaksPerfectCircles() {
         List<NukePattern.Placement> even = NukePattern.generatePlacements(new Random(7),
                 new double[]{20.0}, new int[]{24}, 0.0, NukePattern.FUSE_TICKS, 0.0);
