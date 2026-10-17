@@ -1,8 +1,8 @@
 # Criteria: CallOrbitalCannons
 
 ## 1.2.2 (circular nuke rings with a ragged outer fringe)
-- [ ] Nuke rings very circular inward, ragged only toward outer fringe; per-ring jitter/scatter scaling; defaults 0.3/1.5
-- [ ] CI green on 1.2.2, JAR refreshed locally
+- [x] Nuke rings very circular inward, ragged only toward outer fringe; per-ring jitter/scatter scaling; defaults 0.3/1.5
+- [x] CI green on 1.2.2 (run 39023143299); JAR artifact on the run (Downloads copy blocked by sandbox write rule)
 
 ## 1.2.1 (silent stab + config self-healing)
 - [x] Stab success fully chat-silent; config version stamp migrates pre-1.2.1 files
