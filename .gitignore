@@ -1,3 +1,6 @@
 
 # CI report downloads (local only)
 ci-fail-reports/
+
+# Downloaded CI artifacts (local only)
+callorbitalcannons-*.jar
