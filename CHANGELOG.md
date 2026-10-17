@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.3 — stab every 2 blocks / 1 TNT; nuke rings stay circular
+
+- Stab drill thinned to 1 TNT charge every 2 blocks down the full column
+  (up to 192 charges; `stabMaxSteps` default 64 → 192 so a default world
+  still covers full height at step 2). Blast-resistance stop (≥ 1200)
+  unchanged.
+- Nuke rings now stay ~70-90% circular everywhere including the outer
+  fringe: per-ring jitter/scatter ramp capped at 0.1–0.3 messiness, so
+  even the last rings are just lightly scattered rather than ragged.
+
 ## 1.2.2 — circular nuke rings with a ragged outer fringe
 
 - Nuke rings now stay very circular inward and only get ragged toward the

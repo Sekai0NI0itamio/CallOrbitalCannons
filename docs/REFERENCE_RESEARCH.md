@@ -144,12 +144,15 @@ above are arithmetic on those verbatim values
   `{30, 102, 84, 68, 60, 52, 44, 38, 32, 28}` (538 + center = 539) on
   uniform 7-block radii `{6, 13, …, 69}` (was 5-block `{6, 11, …, 51}`),
   so each band stays visually separated. Angular jitter (default 0.3) and
-  scatter (default 1.5) are applied fully to the outermost ring and scaled
-  down toward the inner rings, so the inner bands stay very circular and
-  only the outer fringe gets ragged — the 1.2.x full-value jitter on every
-  ring made the pattern look unorganized. Per-ring charge counts remain an
-  eyeballed approximation of the footage, not a measured recreation; the
-  payload cap default tightens 650 → 600 (still above the 539 baseline).
+  scatter (default 1.5) are scaled per ring and capped low (~70-90%
+  circular even on the outer fringe) — every ring stays clearly circular
+  with only light scatter, never unorganized. Per-ring charge counts remain
+  an eyeballed approximation of the footage, not a measured recreation;
+  the payload cap default tightens 650 → 600 (still above the 539 baseline).
+- **Stab thinned to 1 TNT every 2 blocks.** The drill now places a single
+  TNT charge every 2 blocks down the full column (up to 192 charges,
+  `stabMaxSteps` default raised 64 → 192 so a default world still covers
+  full height at step 2). The blast-resistance stop (≥ 1200) is unchanged.
 - **Rod targeting falls back to the loaded edge.** Vanilla raycast misses
   past loaded chunks, so aims beyond the loaded edge now approximate the
   last loaded voxel along the look ray (Y clamped to the live world

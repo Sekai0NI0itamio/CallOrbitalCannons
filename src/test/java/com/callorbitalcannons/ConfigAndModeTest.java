@@ -24,9 +24,9 @@ class ConfigAndModeTest {
         assertEquals(79, data.nukeFuseTicks);
         assertEquals(1.5, data.nukeMisalignRange, 1e-9);
         assertEquals(0.3, data.nukeAngularJitter, 1e-9);
-        assertEquals(64, data.stabMaxSteps);
-        assertEquals(3, data.stabTntPerStep);
-        assertEquals(8, data.stabStepSize);
+        assertEquals(192, data.stabMaxSteps);
+        assertEquals(1, data.stabTntPerStep);
+        assertEquals(2, data.stabStepSize);
         assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
     }
 
@@ -50,7 +50,7 @@ class ConfigAndModeTest {
         assertEquals(79, data.nukeFuseTicks);
         assertEquals(600, data.nukePayloadLimit);
         assertEquals(0.3, data.nukeAngularJitter, 1e-9);
-        assertEquals(64, data.stabMaxSteps);
+        assertEquals(192, data.stabMaxSteps);
         assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
     }
 

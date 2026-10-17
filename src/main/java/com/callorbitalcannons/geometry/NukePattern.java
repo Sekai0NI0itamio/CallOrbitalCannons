@@ -9,14 +9,14 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.2 behavior, measured against Wemmbbu cannon footage (lone
+ * <p>1.2.3 behavior, measured against Wemmbbu cannon footage (lone
  * center charge, dense second ring, sparse outer rings, wide gaps between
  * rings): a 539-charge pattern over radii 6..69 — one moderate inner ring,
  * a dense second ring, then strictly decreasing counts outward, on uniform
  * 7-block ring gaps so the bands stay visually separated. Angular jitter
- * and scatter are scaled per ring: inner rings stay very circular and only
- * the outer fringe gets ragged, so the footprint reads as clean bands with
- * a messy edge rather than an unorganized carpet. Counts, jitter, and
+ * and scatter are scaled per ring and kept low (~70-90% circular even on
+ * the outer fringe), so every ring stays clearly circular with only a
+ * light scatter rather than an unorganized carpet. Counts, jitter, and
  * scatter are all configurable; see docs/REFERENCE_RESEARCH.md for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
@@ -119,10 +119,11 @@ public final class NukePattern {
         for (int i = 0; i < radii.length; i++) {
             double baseRadius = radii[i];
             int tntCount = counts[i];
-            // Inner rings stay very circular; outer rings get progressively messier
-            // so the footprint reads as clean bands with a ragged fringe.
-            double ringProgress = radii.length == 1 ? 1.0 : (double) i / (radii.length - 1);
-            double messiness = 0.15 + 0.85 * ringProgress;
+            // Rings stay mostly circular everywhere (~70-90%): a slight
+            // upward ramp toward the outer fringe keeps bands clean but
+            // not rigid, so even the last rings are just lightly scattered.
+            double ringProgress = radii.length == 1 ? 0.0 : (double) i / (radii.length - 1);
+            double messiness = 0.1 + 0.2 * ringProgress;
             double ringJitter = angularJitter * messiness;
             double ringMisalign = misalign * messiness;
             double spacing = (2.0 * Math.PI) / tntCount;

@@ -135,7 +135,7 @@ class NukePatternTest {
     }
 
     @Test
-    void innerRingsStayTighterThanOuterRings() {
+    void allRingsStayMostlyCircular() {
         List<NukePattern.Placement> placements = NukePattern.generatePlacements(new Random(42),
                 NukePattern.RING_RADII, NukePattern.RING_COUNTS,
                 NukePattern.MISALIGN_RANGE, NukePattern.FUSE_TICKS, NukePattern.ANGULAR_JITTER);
@@ -152,14 +152,15 @@ class NukePatternTest {
             }
             rmsDev[ring] = Math.sqrt(sumSq / NukePattern.RING_COUNTS[ring]);
         }
-        // Innermost ring should be markedly tighter than the outermost ring.
-        assertTrue(rmsDev[0] < rmsDev[rmsDev.length - 1] * 0.6,
-                "inner ring rms deviation " + rmsDev[0] + " not tighter than outer " + rmsDev[rmsDev.length - 1]);
-        // Messiness should grow monotonically outward on average.
-        for (int i = 1; i < rmsDev.length; i++) {
-            assertTrue(rmsDev[i] >= rmsDev[i - 1] * 0.9,
-                    "messiness should not decrease from ring " + (i - 1) + " to " + i);
+        // Every ring should remain clearly circular: radial jitter well under 1 block.
+        for (int ring = 0; ring < rmsDev.length; ring++) {
+            assertTrue(rmsDev[ring] < 1.0,
+                    "ring " + ring + " rms deviation " + rmsDev[ring] + " too high, not circular");
         }
+        // Outer fringe may be slightly looser but not dramatically so (~70% circular target).
+        assertTrue(rmsDev[rmsDev.length - 1] < rmsDev[0] * 5.0 + 0.5,
+                "outer ring rms deviation " + rmsDev[rmsDev.length - 1]
+                        + " dramatically messier than inner " + rmsDev[0]);
     }
 
     @Test

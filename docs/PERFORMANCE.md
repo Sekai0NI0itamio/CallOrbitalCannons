@@ -5,9 +5,9 @@
 - Nuke (default config): 1 center + 538 ring charges = **539 TNT
   entities** spawned in one server tick, fuse 79 ticks (~4 s), all
   exploding within a short window across a ~140-block-diameter footprint.
-- Stab (default config): 3 charges per 8-block step across the full world
-  height, top-down. A default world (-64..319) needs up to 48 steps, i.e.
-  up to **144 TNT entities** with 1-tick fuses — fewer when the drill
+- Stab (default config): 1 charge per 2-block step across the full world
+  height, top-down. A default world (-64..319) needs up to 192 steps, i.e.
+  up to **192 TNT entities** with 1-tick fuses — fewer when the drill
   meets blast-resistant rock early.
 
 ## Main performance risks
@@ -65,7 +65,7 @@ workflow run.
 ## Limitations of performance claims
 
 - "Safe by default" means *bounded and validated*, not *lag-free*: a full
-  539-TNT nuke or a 144-charge full-column stab on a weak server will
+  539-TNT nuke or a 192-charge full-column stab on a weak server will
   still spike the tick. Operators on shared hardware should lower
   `nukePayloadLimit`/`maxActiveStrikes`/`stabMaxSteps`.
 - `terrainDestruction` and `reduceBlockDrops` are parsed and validated but

@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StabPatternTest {
     @Test
     void defaultsMatchTunedBaseline() {
-        assertEquals(8, StabPattern.STEP_SIZE);
-        assertEquals(3, StabPattern.TNT_PER_STEP);
+        assertEquals(2, StabPattern.STEP_SIZE);
+        assertEquals(1, StabPattern.TNT_PER_STEP);
         assertEquals(0.75, StabPattern.VERTICAL_OFFSET, 1e-9);
         assertEquals(1, StabPattern.FUSE_TICKS);
     }
@@ -30,27 +30,27 @@ class StabPatternTest {
 
     @Test
     void fullColumnSweepsBottomToTop() {
-        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 8, 64);
+        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 2, 192);
         assertFalse(steps.isEmpty());
         assertEquals(-64, steps.get(0));
         for (int i = 1; i < steps.size(); i++) {
-            assertEquals(8, steps.get(i) - steps.get(i - 1));
+            assertEquals(2, steps.get(i) - steps.get(i - 1));
         }
         assertTrue(steps.get(steps.size() - 1) <= 319);
-        assertEquals(48, steps.size());
-        assertEquals(144, StabPattern.countForSteps(steps.size(), 3));
+        assertEquals(192, steps.size());
+        assertEquals(192, StabPattern.countForSteps(steps.size(), 1));
     }
 
     @Test
     void fullColumnDrillRunsTopDown() {
-        List<Integer> steps = StabPattern.fullColumnStepsDown(319, -64, 8, 64);
+        List<Integer> steps = StabPattern.fullColumnStepsDown(319, -64, 2, 192);
         assertFalse(steps.isEmpty());
         assertEquals(319, steps.get(0));
         for (int i = 1; i < steps.size(); i++) {
-            assertEquals(8, steps.get(i - 1) - steps.get(i));
+            assertEquals(2, steps.get(i - 1) - steps.get(i));
         }
         assertTrue(steps.get(steps.size() - 1) >= -64);
-        assertEquals(48, steps.size());
+        assertEquals(192, steps.size());
     }
 
     @Test
@@ -63,8 +63,8 @@ class StabPatternTest {
 
     @Test
     void maxStepsCapsColumnDepth() {
-        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 4, 3);
-        assertEquals(List.of(-64, -60, -56), steps);
-        assertEquals(15, StabPattern.countForSteps(steps.size(), 5));
+        List<Integer> steps = StabPattern.fullColumnStepsUp(-64, 319, 2, 3);
+        assertEquals(List.of(-64, -62, -60), steps);
+        assertEquals(3, StabPattern.countForSteps(steps.size(), 1));
     }
 }

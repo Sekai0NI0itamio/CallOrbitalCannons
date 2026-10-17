@@ -33,9 +33,9 @@ public final class OrbitalConfigData {
     public double nukeMisalignRange = 1.5;
     /** Per-charge angular wander, as a fraction of one charge spacing. */
     public double nukeAngularJitter = 0.3;
-    public int stabMaxSteps = 64;
-    public int stabTntPerStep = 3;
-    public int stabStepSize = 8;
+    public int stabMaxSteps = 192;
+    public int stabTntPerStep = 1;
+    public int stabStepSize = 2;
     public double stabVerticalOffset = 0.75;
     public int stabFuseTicks = 1;
     public float blastResistanceStop = 1200.0f;
@@ -59,9 +59,9 @@ public final class OrbitalConfigData {
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
         nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 1.5);
         nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.3);
-        stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 64);
-        stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 3);
-        stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 8);
+        stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 192);
+        stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 1);
+        stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 2);
         stabVerticalOffset = clampDouble(warnings, "stabVerticalOffset", stabVerticalOffset, 0.0, 4.0, 0.75);
         stabFuseTicks = clampInt(warnings, "stabFuseTicks", stabFuseTicks, 1, 32767, 1);
         if (blastResistanceStop < 0.0f || Float.isNaN(blastResistanceStop)) {

@@ -24,10 +24,10 @@ public final class StabPattern {
     }
 
     /** Downward step between charge groups. */
-    public static final int STEP_SIZE = 8;
+    public static final int STEP_SIZE = 2;
 
     /** TNT charges spawned per step. */
-    public static final int TNT_PER_STEP = 3;
+    public static final int TNT_PER_STEP = 1;
 
     /** Vertical spacing between charges inside one step group. */
     public static final double VERTICAL_OFFSET = 0.75;

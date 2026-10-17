@@ -16,7 +16,7 @@ approximated, and where this mod differs.
 | Rod | Strike | Effect |
 |---|---|---|
 | Orbital Fishing Rod (aqua italic, glint) | Nuke Shot | 539 TNT (lone center + 10 rings, radii 6–69, dense second ring fading to sparse outer rings on 7-block gaps) fall from 72 blocks up across a ~140-block footprint. Fires silently in chat — only the warning sound plays |
-| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down in 3-TNT groups every 8 blocks with 1-tick fuses (up to 144 charges) — stops at the first blast-resistant block (≥ 1200) |
+| Stab Shot Fishing Rod (aqua italic, glint) | Stab Shot | Full-height column at the target's x/z, drilled top-down with 1 TNT every 2 blocks and 1-tick fuses (up to 192 charges) — stops at the first blast-resistant block (≥ 1200) |
 
 The mode is stored in item data, so renaming an ordinary fishing rod never
 forges a weapon. Rods carry a single durability point: the first survival
@@ -62,7 +62,7 @@ at — and do consume the rod; the world bottom/top clamp the fallback Y,
 so deep worlds (down to -64 and below) work.
 Both rods fire silently in chat — only the warning sound plays; only
 rejections print, and only on the stab rod.
-Nuke rings stay very circular inward and only get ragged toward the outer fringe.
+Nuke rings stay ~70-90% circular everywhere, including the outer fringe — only lightly scattered, never unorganized.
 
 ## Commands (operator level 2)
 
@@ -88,9 +88,9 @@ Nuke rings stay very circular inward and only get ragged toward the outer fringe
 | nukeFuseTicks | 79 | Nuke TNT fuse |
 | nukeMisalignRange | 1.5 | Per-charge scatter-disc radius; applied fully to the outermost ring, scaled down toward the inner rings so they stay circular |
 | nukeAngularJitter | 0.3 | Charge angle wander, fraction of one spacing (breaks clean circles); applied fully to the outermost ring, scaled down toward the inner rings |
-| stabMaxSteps | 64 | Max stab column depth (steps; 48 covers a default world) |
-| stabTntPerStep | 3 | Charges per step |
-| stabStepSize | 8 | Blocks between groups |
+| stabMaxSteps | 192 | Max stab column depth (steps; 192 covers a default world at step 2) |
+| stabTntPerStep | 1 | Charges per step |
+| stabStepSize | 2 | Blocks between groups |
 | stabVerticalOffset | 0.75 | Charge spacing inside a group |
 | stabFuseTicks | 1 | Stab TNT fuse |
 | blastResistanceStop | 1200.0 | Resistance that stops the drill |
@@ -115,7 +115,7 @@ single mod JAR in `mods/`; overlapping versions fight over the mod id.
 ## Server requirements and performance
 
 A full nuke spawns 539 live TNT entities and a full stab column up to
-144 — expect a serious but bounded tick spike. See
+192 — expect a serious but bounded tick spike. See
 `docs/PERFORMANCE.md` for budgets, safeguards, and tuning advice before
 handing these rods to your players. On shared hardware, consider lowering
 `nukePayloadLimit`/`maxActiveStrikes`.
