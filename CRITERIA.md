@@ -1,9 +1,9 @@
 # Criteria: CallOrbitalCannons
 
 ## 1.2.3 (stab every 2 blocks / 1 TNT; nuke rings stay circular)
-- [ ] Stab 1 TNT every 2 blocks down full column (maxSteps 192), blast stop unchanged
-- [ ] Nuke rings ~70-90% circular everywhere incl. outer fringe; per-ring messiness cap 0.3
-- [ ] CI green on 1.2.3, JAR refreshed locally
+- [x] Stab 1 TNT every 2 blocks down full column (maxSteps 192), blast stop unchanged
+- [x] Nuke rings ~70-90% circular everywhere incl. outer fringe; per-ring messiness cap 0.3
+- [x] CI green on 1.2.3 (run 39027501961), JAR artifact on run (Downloads copy blocked by sandbox write rule)
 
 ## 1.2.2 (circular nuke rings with a ragged outer fringe)
 - [x] Nuke rings very circular inward, ragged only toward outer fringe; per-ring jitter/scatter scaling; defaults 0.3/1.5
