@@ -2,8 +2,8 @@
 
 ## 1.2.6 (cubicmetre-proportional rings: 636 TNT)
 
-- [ ] Nuke 636 TNT (center + rings {15,24,32,41,49,58,66,75,83,92,100} ∝ radius at ~2.5-block arc spacing, radii 6.0..40.0 step 3.4), cap 700, ringCount 11; config generation 3 → 4
-- [ ] CI green on 1.2.6; JAR 1.2.6 + sources downloaded to project folder
+- [x] Nuke 636 TNT (center + rings {15,24,32,41,49,58,66,75,83,92,100} ∝ radius at ~2.5-block arc spacing, radii 6.0..40.0 step 3.4), cap 700, ringCount 11; config generation 3 → 4
+- [x] CI green on 1.2.6 (run 39086693381); JAR 1.2.6 + sources downloaded to project folder
 
 ## 1.2.5 (11-ring uniform formation)
 
