@@ -2,8 +2,8 @@
 
 ## 1.2.9 (denser inner rings: 760 TNT)
 
-- [ ] Nuke 760 TNT (1 center + 10 rings, radii {6,11,…,51} step 5, counts {24,48,56,52,65,78,90,103,115,128}), random-angle clumpy rings (jitter default 1.0), scatter disc 0.2, ringCount 10 (clamp 1–10); config generation 6 → 7; payload limit 800
-- [ ] CI green on 1.2.9 (run TBD); JAR 1.2.9 + sources downloaded to project folder
+- [x] Nuke 760 TNT (1 center + 10 rings, radii {6,11,…,51} step 5, counts {24,48,56,52,65,78,90,103,115,128}), random-angle clumpy rings (jitter default 1.0), scatter disc 0.2, ringCount 10 (clamp 1–10); config generation 6 → 7; payload limit 800
+- [x] CI green on 1.2.9 (run 39099635630, 51/51 tests); JAR 1.2.9 + sources downloaded to project folder
 
 ## 1.2.8 (Mk.6 payload formation: 715 TNT)
 
