@@ -15,12 +15,11 @@ public final class OrbitalConfigData {
     /**
      * Config generation stamp. Bumped whenever defaults change meaning
      * (1.2.1 = generation 2, 1.2.5 = generation 3, 1.2.6 = generation 4,
-     * 1.2.7 = generation 5); files without the stamp or from an older
-     * generation are backed up + regenerated on load instead of silently
-     * keeping stale gameplay values (e.g. a 1.2.6 proportional-count nuke
-     * on the new staged 669-charge formation).
+     * 1.2.7 = generation 5, 1.2.8 = generation 6); files without the stamp
+     * or from an older generation are backed up + regenerated on load
+     * instead of silently keeping stale gameplay values.
      */
-    public static final int CURRENT_CONFIG_VERSION = 5;
+    public static final int CURRENT_CONFIG_VERSION = 6;
 
     public int configVersion = CURRENT_CONFIG_VERSION;
     public double targetingRange = 200.0;
@@ -28,13 +27,13 @@ public final class OrbitalConfigData {
     /** Zero disables the per-player recharge (rods are single-use anyway). */
     public long playerCooldownTicks = 0;
     public int maxActiveStrikes = 4;
-    public int nukePayloadLimit = 700;
+    public int nukePayloadLimit = 800;
     public int nukeRingCount = 10;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
-    public double nukeMisalignRange = 0.5;
-    /** Per-charge angular wander, as a fraction of one charge spacing (0.0 = the staged even spacing). */
-    public double nukeAngularJitter = 0.0;
+    public double nukeMisalignRange = 0.2;
+    /** Per-charge angular wander, as a fraction of one charge spacing (1.0 = random angles, cubicmetre's Mk.6 clumpy rings). */
+    public double nukeAngularJitter = 1.0;
     public int stabMaxSteps = 192;
     public int stabTntPerStep = 1;
     public int stabStepSize = 2;
@@ -55,12 +54,12 @@ public final class OrbitalConfigData {
         strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
         playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 0);
         maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
-        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 700);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 800);
         nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 10, 10);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);
-        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 0.5);
-        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 1.0, 0.0);
+        nukeMisalignRange = clampDouble(warnings, "nukeMisalignRange", nukeMisalignRange, 0.0, 8.0, 0.2);
+        nukeAngularJitter = clampDouble(warnings, "nukeAngularJitter", nukeAngularJitter, 0.0, 2.0, 1.0);
         stabMaxSteps = clampInt(warnings, "stabMaxSteps", stabMaxSteps, 1, 512, 192);
         stabTntPerStep = clampInt(warnings, "stabTntPerStep", stabTntPerStep, 1, 16, 1);
         stabStepSize = clampInt(warnings, "stabStepSize", stabStepSize, 1, 16, 2);

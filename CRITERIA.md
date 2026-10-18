@@ -1,9 +1,14 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.8 (Mk.6 payload formation: 715 TNT)
+
+- [ ] Nuke 715 TNT (1 center + 10 rings, radii {6,11,…,51} step 5, counts {15,28,40,52,65,78,90,103,115,128} proportional to radius), random-angle clumpy rings (jitter default 1.0), scatter disc 0.2, ringCount 10 (clamp 1–10); config generation 5 → 6; payload limit 800
+- [ ] CI green on 1.2.8 (run TBD); JAR 1.2.8 + sources downloaded to project folder
+
 ## 1.2.7 (staged formation restored: 669 TNT)
 
 - [x] Nuke 669 TNT (1 stationary center + 10 rings, radii {6,11,…,51} step 5, counts {15,27,38,49,62,73,83,95,107,119}), flat 0.5 scatter, jitter default 0.0, ringCount 10 (clamp 1–10); config generation 4 → 5
-- [x] CI green on 1.2.7 (run 39087879138, 51/51 tests); JAR 1.2.7 + sources downloaded to project folder
+- [x] CI green on 1.2.7 (runs 39087879138 + 39088031703, 51/51 tests); JAR 1.2.7 + sources downloaded to project folder
 
 ## 1.2.6 (cubicmetre-proportional rings: 636 TNT)
 

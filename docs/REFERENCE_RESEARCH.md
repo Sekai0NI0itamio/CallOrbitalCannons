@@ -280,3 +280,56 @@ above are arithmetic on those verbatim values
   (clamp 1–10). Config generation stamp 4 → 5.
 - Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
   stop ≥ 1200).
+
+## 13. 1.2.8 deviations (cubicmetre Mk.6 payload formation: 715 TNT)
+
+- **Directive:** after 1.2.7's staged formation, in-game feedback: "its
+  still terible, like the 2nd ring needs to be dense ... currently its too
+  evenly spread out" plus "Just fully research cubic meter" / "research
+  cubic meter orbital cannons, the old ones". So the TNT count law from
+  cubicmetre is taken as correct, and the formation/render must match
+  cubicmetre's Mk.6 cannon rather than the earlier staged recreation.
+- **Verified Mk.6 facts:**
+  - cubicmetre's own transcript ("Minecraft's Most Advanced TnT Weapon is
+    Here", youtube q78LRgHt_zU): "the amount of TNT we add to the ring is
+    proportional to its radius"; prime momentum kicks each primed TNT in a
+    random direction at 0.2 blocks/tick (tiny per-TNT fuzz); "constant
+    relative distance of about 140 blocks" height; demo ring charge 100 TNT
+    / fuse 80; nuke sizes 1–31 (size 31 = 372-block diameter, >16
+    "enormous"); size-16 shots run ~1000–2000 TNT ("glitched in together");
+    smallest test shot 171 TNT at 100 blocks.
+  - cubicmetre's fire-control app (github.com/cubicmetre/osc-fire-control,
+    src/utils/calculations.ts): DY_NUKE = 140; payload build ticks grow
+    quadratically with nukeSize
+    (6 × ((n(n+1))/2 + n×2.4375) + 930) — total TNT ∝ size², consistent
+    with counts ∝ radius.
+  - FoxyWoxy12000/Orbital-Strike-Mod (Modrinth: "just like Wemmbu from the
+    unstable SMP"), NukeMk6Shot.java: charges spawn at the center, offset
+    height 150, one RANDOM angle per charge (not even spacing), counts
+    15 × ring index (last ring doubled), outward speed 0.15 + (r−1) × 0.5
+    per ring, strong downward velocity (−7.0 → −7.75 eased), fuse 40.
+    Confirms the Mk.6 render: random-angle clumps, not even dots.
+- **Adopted for 1.2.8:** radii 6..51 (uniform 5-block gaps, ~102-block
+  footprint matching the staged "100×100 destruction area"); counts
+  round(2.5 × radius) = {15, 28, 40, 52, 65, 78, 90, 103, 115, 128} =
+  714 ring charges + 1 center = 715 TNT (cubicmetre's ∝ radius law with a
+  constant ~2.5-block arc spacing at even placement); placement = random
+  angle per charge (`nukeAngularJitter` default 1.0; 0.0 restores even
+  rings); scatter = flat 0.2-block disc (prime-momentum-equivalent fuzz);
+  no per-ring ramp. Height 72 / fuse 79 / drag 0.98 retained from this
+  mod's validated ballistics model (Mk.6's 140–150 height uses its own
+  downward-velocity launcher; this mod's drift-compensated fall already
+  reproduces the "cluster above target, expands into rings as it falls"
+  look). Center charge stationary, fuse 79.
+- **Not adopted:** FoxyWoxy's exact launch numbers (height 150, per-ring
+  speed ramp, fuse 40, counts 15r) — this mod's engine places charges with
+  drag-compensated outward velocity so they arrive at ring radius on
+  landing; adopting those physics would need new engine machinery. The Mk.6
+  schematic/map downloads (Planet Minecraft, MineSchematic) contain the
+  cannon machine, not the dynamically built payload, so they carry no
+  per-ring TNT data.
+- **What changed vs 1.2.7:** counts 15..119 → 15..128 (∝ radius); default
+  placement even → random clumps (jitter 0.0 → 1.0); scatter 0.5 → 0.2;
+  payload limit 700 → 800; generation 5 → 6; total 669 → 715 TNT.
+- Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
+  stop ≥ 1200).

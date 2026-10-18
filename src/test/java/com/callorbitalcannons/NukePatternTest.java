@@ -25,24 +25,24 @@ class NukePatternTest {
     }
 
     @Test
-    void ringCountsMatchDocumentedBaseline() {
-        assertArrayEquals(new int[]{15, 27, 38, 49, 62, 73, 83, 95, 107, 119},
+    void ringCountsMatchMk6Baseline() {
+        // cubicmetre Mk.6: the amount of TNT added to a ring is proportional
+        // to its radius, round(2.5 × radius). 15 at radius 6 … 128 at radius
+        // 51, 714 ring charges + 1 center = 715 TNT.
+        assertArrayEquals(new int[]{15, 28, 40, 52, 65, 78, 90, 103, 115, 128},
                 NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchStagedBaseline() {
-        // Upstream's debug text still reads a stale "661 tnt" and its README
-        // says 661, but the source arrays sum to 668 + 1 center = 669
-        // (docs/REFERENCE_RESEARCH.md §3, §12).
-        assertEquals(668, NukePattern.ringTotal());
-        assertEquals(669, NukePattern.totalPayload());
+    void ringTotalsMatchMk6Baseline() {
+        assertEquals(714, NukePattern.ringTotal());
+        assertEquals(715, NukePattern.totalPayload());
     }
 
     @Test
     void ringCountsGrowWithRadius() {
-        // The staged counts load every ring heavier than the last, 15 to
-        // 119, so outer circumferences keep the same charge density.
+        // Mk.6 loads every ring heavier than the last, 15 to 128, so outer
+        // circumferences hold proportionally more charge.
         int[] counts = NukePattern.RING_COUNTS;
         for (int i = 1; i < counts.length; i++) {
             assertTrue(counts[i] > counts[i - 1],
@@ -51,30 +51,46 @@ class NukePatternTest {
     }
 
     @Test
-    void stagedArcSpacingStaysInBand() {
-        // The staged counts hold a 2.5-2.7-block arc spacing on every ring
-        // (source-verified), so rings read as evenly dotted circles.
+    void chargesAreNotEvenlySpacedAroundRings() {
+        // Mk.6 places charges at random angles around each ring: gaps
+        // between consecutive charges vary widely, so rings render as dense
+        // clumps rather than perfectly even dots.
+        Random random = new Random(42);
+        List<NukePattern.Placement> placements = NukePattern.generatePlacements(random,
+                NukePattern.RING_RADII, NukePattern.RING_COUNTS,
+                0.0, NukePattern.FUSE_TICKS, 1.0);
         int[] counts = NukePattern.RING_COUNTS;
-        double[] radii = NukePattern.RING_RADII;
-        double min = Double.MAX_VALUE;
-        double max = 0.0;
-        for (int i = 0; i < counts.length; i++) {
-            double spacing = 2.0 * Math.PI * radii[i] / counts[i];
-            assertTrue(spacing > 2.4 && spacing < 2.8,
-                    "ring " + i + " spacing " + spacing + " outside the staged 2.4-2.8 band");
-            min = Math.min(min, spacing);
-            max = Math.max(max, spacing);
+        int offset = 0;
+        for (int ring = 0; ring < counts.length; ring++) {
+            double spacing = 2.0 * Math.PI / counts[ring];
+            double[] angles = new double[counts[ring]];
+            for (int i = 0; i < counts[ring]; i++) {
+                NukePattern.Placement p = placements.get(offset + i);
+                angles[i] = Math.atan2(p.dz(), p.dx());
+            }
+            java.util.Arrays.sort(angles);
+            double minGap = Double.MAX_VALUE;
+            double maxGap = 0.0;
+            for (int i = 1; i < angles.length; i++) {
+                double gap = angles[i] - angles[i - 1];
+                minGap = Math.min(minGap, gap);
+                maxGap = Math.max(maxGap, gap);
+            }
+            double wrap = 2.0 * Math.PI - angles[angles.length - 1] + angles[0];
+            minGap = Math.min(minGap, wrap);
+            maxGap = Math.max(maxGap, wrap);
+            assertTrue(maxGap - minGap > spacing * 0.5,
+                    "ring " + ring + " gaps too uniform [" + minGap + ", " + maxGap + "] for Mk.6 random placement");
+            offset += counts[ring];
         }
-        assertTrue(max - min < 0.25,
-                "arc spacing should stay in the staged band, saw [" + min + ", " + max + "]");
     }
 
     @Test
-    void defaultsMatchStagedBaseline() {
+    void defaultsMatchMk6Baseline() {
         assertEquals(72.0, NukePattern.SPAWN_HEIGHT, 1e-9);
         assertEquals(79, NukePattern.FUSE_TICKS);
-        assertEquals(0.5, NukePattern.MISALIGN_RANGE, 1e-9);
-        assertEquals(0.0, NukePattern.ANGULAR_JITTER, 1e-9);
+        assertEquals(0.2, NukePattern.MISALIGN_RANGE, 1e-9);
+        assertEquals(1.0, NukePattern.ANGULAR_JITTER, 1e-9);
         assertEquals(0.98, NukePattern.DRAG, 1e-9);
     }
 
@@ -139,7 +155,7 @@ class NukePatternTest {
     }
 
     @Test
-    void zeroScatterAndJitterLandsExactlyOnRings() {
+    void zeroScatterKeepsChargesOnRingRadius() {
         List<NukePattern.Placement> placements = NukePattern.generatePlacements(new Random(7),
                 NukePattern.RING_RADII, NukePattern.RING_COUNTS, 0.0, NukePattern.FUSE_TICKS, 0.0);
         int cursor = 0;
@@ -169,8 +185,8 @@ class NukePatternTest {
             }
             rmsDev[ring] = Math.sqrt(sumSq / NukePattern.RING_COUNTS[ring]);
         }
-        // Every ring stays clearly circular: the flat 0.5 disc keeps radial
-        // deviation far under half a block on all rings alike (no ramp).
+        // Every ring stays clearly circular: the flat 0.2 disc keeps radial
+        // deviation far under half a block on all rings alike.
         for (int ring = 0; ring < rmsDev.length; ring++) {
             assertTrue(rmsDev[ring] < 0.5,
                     "ring " + ring + " rms deviation " + rmsDev[ring] + " too high, not circular");

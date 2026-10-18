@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.8 — cubicmetre Mk.6 payload formation: 715 TNT (was 669)
+
+- Nuke now uses cubicmetre's Mk.6 payload formation instead of the staged
+  recreation: ring charge counts are proportional to radius
+  (round(2.5 × radius): {15, 28, 40, 52, 65, 78, 90, 103, 115, 128} on
+  radii 6..51 with uniform 5-block gaps — 714 ring charges + 1 center =
+  715 TNT over a ~102-block footprint), and every charge is placed at a
+  RANDOM angle around its ring with a tiny 0.2-block scatter disc. This is
+  how cubicmetre's Mk.6 cannon actually renders: prime momentum kicks each
+  TNT in a random direction, so rings show up as dense clumps with gaps
+  between them instead of perfectly even dots ("too evenly spread out").
+  Inner rings are denser per unit area than outer ones, so the 2nd ring
+  lands dense while outer rings stay breathable.
+- Defaults updated: `nukeAngularJitter` 0.0 → 1.0 (1.0 = random angles;
+  set 0.0 for even rings), `nukeMisalignRange` 0.5 → 0.2,
+  `nukePayloadLimit` 700 → 800 (above the 715 baseline); config
+  generation stamp 5 → 6.
+
 ## 1.2.7 — staged formation restored: 669 TNT (was 636)
 
 - Nuke now reproduces the staged Unstable SMP formation verbatim, the one

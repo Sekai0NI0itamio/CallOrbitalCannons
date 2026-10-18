@@ -9,16 +9,14 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.7 behavior: the source-verified staged formation — 1 stationary
- * center charge and 10 rings at radii 6..51 (uniform 5-block gaps) with
- * per-ring counts {15, 27, 38, 49, 62, 73, 83, 95, 107, 119}, so a strike
- * uses 668 ring charges + 1 center = 669 TNT across a ~102-block footprint.
- * This is the staged Unstable SMP payload drop (cubicmetre's Skript
- * simulation) as shipped upstream (OrbitalStrikeConfig at 067fbcd): every
- * charge gets one flat uniform scatter disc of 0.5 blocks — no per-ring
- * ramp, no angular jitter by default — then a clamp into its ring band.
- * Scatter, jitter, and ring count remain configurable; see
- * docs/REFERENCE_RESEARCH.md §12 for provenance.
+ * <p>1.2.8 behavior: the cubicmetre Mk.6 payload formation — ring charge
+ * counts are proportional to radius ({15, 28, 40, 52, 65, 78, 90, 103, 115,
+ * 128} for radii 6..51, 714 ring charges + 1 center = 715 TNT over a
+ * ~102-block footprint), and every charge is placed at a random angle around
+ * its ring with a tiny 0.2-block scatter disc. This matches cubicmetre's
+ * Mk.6 cannon: prime momentum kicks each TNT in a random direction, so rings
+ * render as dense clumps rather than even spacing. Counts, jitter, scatter,
+ * and ring count remain configurable; see docs/REFERENCE_RESEARCH.md §13.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -31,13 +29,15 @@ public final class NukePattern {
     public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
 
     /**
-     * Charges per ring (staged baseline, verbatim upstream). Sums to 668
-     * ring charges; plus the center charge each strike uses 669 TNT over a
-     * ~102-block footprint — the staged strikes' documented ~100×100
-     * destruction area. Counts grow smoothly outward, 15 to 119, holding a
-     * 2.5-2.7-block arc spacing on every ring.
+     * Charges per ring (cubicmetre Mk.6 law: the amount of TNT added to a
+     * ring is proportional to its radius, round(2.5 × radius)). Sums to 714
+     * ring charges; plus the center charge each strike uses 715 TNT over a
+     * ~102-block footprint. Constant ~2.5-block arc spacing at even
+     * placement; with random placement (the default) rings render as dense
+     * clumps with gaps between them, and inner rings are denser per unit
+     * area than outer ones — matching cubicmetre's Mk.6 payload render.
      */
-    public static final int[] RING_COUNTS = {15, 27, 38, 49, 62, 73, 83, 95, 107, 119};
+    public static final int[] RING_COUNTS = {15, 28, 40, 52, 65, 78, 90, 103, 115, 128};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;
@@ -48,16 +48,16 @@ public final class NukePattern {
     /** Per-tick horizontal velocity retention of a primed TNT entity. */
     public static final double DRAG = 0.98;
 
-    /** Default scatter-disc radius per charge, in blocks (flat for every ring — the staged spec's 0.5). */
-    public static final double MISALIGN_RANGE = 0.5;
+    /** Default scatter-disc radius per charge, in blocks (flat for every ring — cubicmetre's Mk.6 prime-momentum kick is tiny, ~0.2 blocks). */
+    public static final double MISALIGN_RANGE = 0.2;
 
     /**
-     * Default angular jitter as a fraction of one charge spacing (0.0 =
-     * none, the staged spec's even spacing). Each charge's angle wanders up
-     * to ± this fraction of the spacing; the knob remains for players who
-     * want a deliberately ragged carpet.
+     * Default angular jitter as a fraction of one charge spacing (1.0 =
+     * random: cubicmetre's Mk.6 rings place charges at random angles, so
+     * rings render as dense clumps rather than even spacing; 0.0 = even
+     * rings).
      */
-    public static final double ANGULAR_JITTER = 0.0;
+    public static final double ANGULAR_JITTER = 1.0;
 
     /** Placement of one ring charge relative to the target center. */
     public record Placement(double dx, double dz, double vx, double vz) {
@@ -112,9 +112,10 @@ public final class NukePattern {
     }
 
     /**
-     * Generates every ring placement for one strike: flat angular jitter
-     * around the even spacing (zero by default), uniform-disc scatter, band
-     * clamp, then drag-compensated velocity toward the final offset.
+     * Generates every ring placement for one strike: angular jitter around
+     * the even spacing (default 1.0 = random angles per charge), uniform-disc
+     * scatter, band clamp, then drag-compensated velocity toward the final
+     * offset.
      */
     public static List<Placement> generatePlacements(Random random, double[] radii, int[] counts,
                                                      double misalign, int fuseTicks, double angularJitter) {
