@@ -2,7 +2,7 @@
 
 ## Expected entity counts
 
-- Nuke (default config): 1 center + 1100 ring charges = **1101 TNT
+- Nuke (default config): 1 center + 635 ring charges = **636 TNT
   entities** spawned in one server tick, fuse 79 ticks (~4 s), all
   exploding within a short window across a ~80-block-diameter footprint.
 - Stab (default config): 1 charge per 2-block step across the full world
@@ -12,7 +12,7 @@
 
 ## Main performance risks
 
-1. **1101 near-simultaneous vanilla explosions**: each explosion runs the
+1. **636 near-simultaneous vanilla explosions**: each explosion runs the
    vanilla ~1,400-ray block-density calculation on the server thread, plus
    block updates, lighting updates, and entity damage scans.
 2. **Item-entity floods**: crater block drops become hundreds of item
@@ -29,8 +29,8 @@
 - `StrikeScheduler`: server-thread-only queue, configurable
   `strikeDelayTicks` (default 10), optional `playerCooldownTicks`
   (default 0 = off; rods are single-use), `maxActiveStrikes` (default 4),
-   duplicate suppression, and `nukePayloadLimit` (default 1200, above the
-   1101 baseline so the full pattern spawns uncapped by default).
+   duplicate suppression, and `nukePayloadLimit` (default 700, above the
+   636 baseline so the full pattern spawns uncapped by default).
 - Coordinate/dimension validation at schedule time and revalidation
   (loaded chunk, world height) at fire time; state pruned on world unload
   and cleared on server shutdown with log lines for every rejection.
@@ -43,7 +43,7 @@
 
 ## CI tests and benchmark methodology
 
-- `NukePatternTest` asserts the exact entity budget (1100 + 1) and that
+- `NukePatternTest` asserts the exact entity budget (635 + 1) and that
   every placement lands inside its ring band, so footprint regressions
   fail the build.
 - `StabPatternTest` asserts the full bottom-to-top column coverage,
@@ -65,7 +65,7 @@ workflow run.
 ## Limitations of performance claims
 
 - "Safe by default" means *bounded and validated*, not *lag-free*: a full
-  1101-TNT nuke or a 192-charge full-column stab on a weak server will
+  636-TNT nuke or a 192-charge full-column stab on a weak server will
   still spike the tick. Operators on shared hardware should lower
   `nukePayloadLimit`/`maxActiveStrikes`/`stabMaxSteps`.
 - `terrainDestruction` and `reduceBlockDrops` are parsed and validated but

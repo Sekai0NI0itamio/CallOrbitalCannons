@@ -14,12 +14,13 @@ import java.util.List;
 public final class OrbitalConfigData {
     /**
      * Config generation stamp. Bumped whenever defaults change meaning
-     * (1.2.1 = generation 2, 1.2.5 = generation 3); files without the
-     * stamp or from an older generation are backed up + regenerated on
-     * load instead of silently keeping stale gameplay values (e.g. a
-     * 1.2.4 seven-ring nuke on the eleven-ring formation).
+     * (1.2.1 = generation 2, 1.2.5 = generation 3, 1.2.6 = generation 4);
+     * files without the stamp or from an older generation are backed up +
+     * regenerated on load instead of silently keeping stale gameplay
+     * values (e.g. a 1.2.5 uniform 100-charge ring nuke on the new
+     * proportional-count formation).
      */
-    public static final int CURRENT_CONFIG_VERSION = 3;
+    public static final int CURRENT_CONFIG_VERSION = 4;
 
     public int configVersion = CURRENT_CONFIG_VERSION;
     public double targetingRange = 200.0;
@@ -27,7 +28,7 @@ public final class OrbitalConfigData {
     /** Zero disables the per-player recharge (rods are single-use anyway). */
     public long playerCooldownTicks = 0;
     public int maxActiveStrikes = 4;
-    public int nukePayloadLimit = 1200;
+    public int nukePayloadLimit = 700;
     public int nukeRingCount = 11;
     public double nukeSpawnHeight = 72.0;
     public int nukeFuseTicks = 79;
@@ -54,7 +55,7 @@ public final class OrbitalConfigData {
         strikeDelayTicks = clampInt(warnings, "strikeDelayTicks", strikeDelayTicks, 0, 1200, 10);
         playerCooldownTicks = clampLong(warnings, "playerCooldownTicks", playerCooldownTicks, 0, 72000, 0);
         maxActiveStrikes = clampInt(warnings, "maxActiveStrikes", maxActiveStrikes, 1, 32, 4);
-        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 1200);
+        nukePayloadLimit = clampInt(warnings, "nukePayloadLimit", nukePayloadLimit, 1, 8000, 700);
         nukeRingCount = clampInt(warnings, "nukeRingCount", nukeRingCount, 1, 11, 11);
         nukeSpawnHeight = clampDouble(warnings, "nukeSpawnHeight", nukeSpawnHeight, 8.0, 320.0, 72.0);
         nukeFuseTicks = clampInt(warnings, "nukeFuseTicks", nukeFuseTicks, 1, 32767, 79);

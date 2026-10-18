@@ -26,32 +26,47 @@ class NukePatternTest {
 
     @Test
     void ringCountsMatchDocumentedBaseline() {
-        assertArrayEquals(new int[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        assertArrayEquals(new int[]{15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100},
                 NukePattern.RING_COUNTS);
     }
 
     @Test
-    void ringTotalsMatchElevenHundredOneBaseline() {
-        assertEquals(1100, NukePattern.ringTotal());
-        assertEquals(1101, NukePattern.totalPayload());
+    void ringTotalsMatchCubicMetreProportionalBaseline() {
+        assertEquals(635, NukePattern.ringTotal());
+        assertEquals(636, NukePattern.totalPayload());
     }
 
     @Test
-    void ringCountsAreUniformWithWideningSpacing() {
+    void ringCountsAreProportionalToRadius() {
+        // cubicmetre Mk.6: the TNT added to a ring is proportional to its
+        // radius (2.5 charges per block, rounded), never a uniform count.
         int[] counts = NukePattern.RING_COUNTS;
-        for (int i = 0; i < counts.length; i++) {
-            assertEquals(100, counts[i], "ring " + i + " should carry the uniform ring count");
-        }
-        // Circumference grows linearly outward while the count stays fixed,
-        // so spacing widens outward: solid inner rings, pointillist outer.
         double[] radii = NukePattern.RING_RADII;
-        double prevSpacing = -1.0;
+        double perRadius = (double) counts[counts.length - 1] / radii[radii.length - 1];
+        for (int i = 0; i < counts.length; i++) {
+            double ideal = perRadius * radii[i];
+            assertTrue(Math.abs(counts[i] - ideal) <= 0.5 + 1e-9,
+                    "ring " + i + " count " + counts[i] + " should track " + ideal);
+        }
+    }
+
+    @Test
+    void arcSpacingStaysUniformAcrossAllRings() {
+        // Proportional counts buy a constant arc spacing: every ring reads
+        // as the same dotted circle instead of solid inner walls.
+        int[] counts = NukePattern.RING_COUNTS;
+        double[] radii = NukePattern.RING_RADII;
+        double min = Double.MAX_VALUE;
+        double max = 0.0;
         for (int i = 0; i < counts.length; i++) {
             double spacing = 2.0 * Math.PI * radii[i] / counts[i];
-            assertTrue(spacing > prevSpacing,
-                    "ring " + i + " spacing " + spacing + " should widen vs previous " + prevSpacing);
-            prevSpacing = spacing;
+            assertTrue(spacing > 2.4 && spacing < 2.6,
+                    "ring " + i + " spacing " + spacing + " outside the ~2.5-block band");
+            min = Math.min(min, spacing);
+            max = Math.max(max, spacing);
         }
+        assertTrue(max - min < 0.1,
+                "arc spacing should stay tight across rings, saw [" + min + ", " + max + "]");
     }
 
     @Test

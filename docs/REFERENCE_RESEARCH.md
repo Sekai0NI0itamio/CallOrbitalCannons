@@ -193,3 +193,48 @@ above are arithmetic on those verbatim values
 - **Nuke reshaped to the manually counted reference formation:** 1 center charge + 11 rings of 100 charges each = 1101 TNT (was 225), on radii {6.0, 9.4, …, 40.0} uniform 3.4-block gaps (was 7-block, 6–48), ~80-block footprint (was ~96). The uniform per-ring count was derived from the observed outer-ring spacing: circumference 2π×40 ≈ 251 blocks over ~2.5-block charge spacing (1–2-block visible gaps) gives 100 charges on the outermost ring, reused for every ring — so inner rings pack solid and the outer fringe reads pointillist.
 - **Defaults updated:** `nukeRingCount` 7 → 11, `nukePayloadLimit` 250 → 1200 (above the 1101 baseline); config generation stamp 2 → 3 so stored 1.2.x configs are backed up + regenerated on load.
 - Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance stop ≥ 1200).
+
+## 11. 1.2.6 deviations (cubicmetre-proportional rings: 636 TNT)
+
+- **In-game feedback:** the 1.2.5 1101-charge nuke was "tooo much tnt" in
+  practice. Re-derived the ring law from cubicmetre's own Mk.6
+  walkthrough ("Minecraft's Most Advanced TnT Weapon is Here",
+  youtube.com/watch?v=q78LRgHt_zU) instead of the counted video frames:
+  "we need more TNT in the larger rings" — "the amount of TNT we add to
+  the ring is proportional to its radius", a method that "uses only half
+  the amount of TNT".
+- **New baseline:** counts {15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100}
+  = round(2.5 × radius) charges per ring (2.5 charges per block of ring
+  radius) → 635 ring charges + 1 center = 636 TNT (was 1101, −42%). The
+  outer ring keeps its validated 100 charges (2π×40 / 100 ≈ 2.5-block
+  spacing); every ring now holds that same ~2.5-block arc spacing, so
+  inner rings are sparse dotted circles instead of solid walls. Radii
+  {6.0..40.0}, 3.4 gaps, 72-block drop, 79-tick fuse, jitter/scatter all
+  unchanged. `nukePayloadLimit` 1200 → 700; config generation stamp
+  3 → 4.
+- **Same-video context:** the nuke effect diameter scales 12 blocks per
+  size point (size 31 → 372 blocks; sizes above 16 hold "an enormous
+  amount of TNT"); the smallest test shot fires 171 TNT; payloads hold "a
+  constant relative distance of about 140 blocks from the target" (this
+  port keeps its verified 72-block drop + 79-tick fuse instead); ring
+  expansion uses one short-fuse expansion charge per ring plus "9 TNT set
+  to explode exactly one game tick before our ring expansion charge".
+- **Wemmbu staging note:** cubicmetre states Wemmbu's on-screen strikes
+  were "a Skript script I made, which simulates the payload builder" —
+  a visual described as "a ring of TNT with one TNT in the middle drops
+  down". Wemmbu's video credits "orbital cannon designed by: @cubicmetre"
+  and marks it "staged for story-telling purposes". The dense-carpet
+  frames that seeded 1.2.5's uniform 100-count were therefore a staged
+  approximation; the Mk.6 builder's proportional law is the closer
+  ground truth.
+- **Similar mods cross-check** (searched 2026-10-18): FoxyWoxy12000's
+  Orbital-Strike-Mod (github.com/FoxyWoxy12000/Orbital-Strike-Mod) ships
+  NukeMk4 with per-ring counts 70 + (ring−1), 5 center charges, spawn
+  height +70, 80-tick fuse, velocity-expanded rings (recommended sizes
+  12/16), plus an AccurateNuke module aiming at 48 + 16 × ring per ring
+  at height +120; NinjiJorYT's "Better Orbital Strike Cannon"
+  (CurseForge) defaults to 10 rings, configurable 1–128, "more rings
+  spread farther". Per-ring counts in the tens-to-~100 range spread over
+  a dozen-ish rings — none of them uniform 100-charge inner rings.
+- Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
+  stop ≥ 1200).

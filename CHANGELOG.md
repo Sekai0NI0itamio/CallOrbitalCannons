@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.6 — cubicmetre-proportional rings: 636 TNT (was 1101)
+
+- Nuke ring counts now follow cubicmetre's Mk.6 law — "the amount of TNT
+  we add to the ring is proportional to its radius" — replacing the
+  uniform 100-charge rings of 1.2.5. New counts {15, 24, 32, 41, 49, 58,
+  66, 75, 83, 92, 100} (2.5 charges per block of radius, rounded) hold a
+  constant ~2.5-block arc spacing on all eleven rings; radii and gaps are
+  unchanged (6.0..40.0, step 3.4). Total payload 1101 → 636 (1 center +
+  635), −42% — in-game feedback called 1101 "tooo much tnt". Inner rings
+  now read as clean dotted circles instead of solid walls.
+- Research notes in docs/REFERENCE_RESEARCH.md §11: Mk.6 diameter scale
+  (12 blocks per size point; >16 "enormous"), the 171-TNT smallest test
+  shot, payloads held "a constant relative distance of about 140 blocks",
+  and cubicmetre's statement that Wemmbu's on-screen strikes were a
+  staged Skript simulation — so the uniform 100-charge read was not
+  literal.
+- Defaults updated: `nukePayloadLimit` 1200 → 700 (above the 636
+  baseline); config generation stamp 3 → 4, so stored 1.2.x configs are
+  backed up + regenerated on load.
+
 ## 1.2.5 — 11-ring formation: uniform 100-charge rings, 1101 TNT
 
 - Nuke reshaped to the manually counted reference formation: 1 center

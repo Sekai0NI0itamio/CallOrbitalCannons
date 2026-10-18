@@ -9,17 +9,17 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.5 behavior, shaped to the manually counted Wemmbbu formation
- * (11 rings, 3.4-block ring gaps, equal charges on every ring): a
- * 1101-charge pattern over radii 6.0..40.0 — one center charge plus eleven
- * rings of 100 charges each. The uniform per-ring count is derived from the
- * outermost ring: circumference 2π×40 ≈ 251 blocks over the observed
- * 2.5-block charge spacing (1–2-block visible gaps) ≈ 100. Because the
- * circumference grows outward while the count stays fixed, inner rings read
- * solid while the outer fringe sits pointillist (~2.5 blocks apart).
+ * <p>1.2.6 behavior, following cubicmetre's Mk.6 ring law — "the amount
+ * of TNT we add to the ring is proportional to its radius" — so every ring
+ * carries round(2.5 × radius) charges at a constant ~2.5-block arc spacing:
+ * a 636-charge pattern over radii 6.0..40.0 — one center charge plus rings
+ * of {15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100}. The 1.2.5 uniform
+ * 100-per-ring count made inner rings solid walls and doubled the in-game
+ * TNT ("tooo much tnt"); the proportional law reads every ring as a clean
+ * dotted circle, sparsest toward the center, and halves the payload.
  * Angular jitter and scatter are scaled per ring and kept low (~80-95%
  * circular even on the outer fringe). Counts, jitter, and scatter are all
- * configurable; see docs/REFERENCE_RESEARCH.md for provenance.
+ * configurable; see docs/REFERENCE_RESEARCH.md §11 for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -32,13 +32,13 @@ public final class NukePattern {
     public static final double[] RING_RADII = {6.0, 9.4, 12.8, 16.2, 19.6, 23.0, 26.4, 29.8, 33.2, 36.6, 40.0};
 
     /**
-     * Charges per ring. Sums to 1100 ring charges; plus the center charge
-     * each strike uses 1101 TNT. Every ring carries the same 100 charges —
-     * the outermost-ring count derived from the observed 1–2 block charge
-     * gaps (2π×40.0 / 2.5 ≈ 100) — so inner rings pack solid and the outer
-     * fringe reads pointillist.
+     * Charges per ring. Sums to 635 ring charges; plus the center charge
+     * each strike uses 636 TNT. Counts follow the Mk.6 proportional law —
+     * round(2.5 × radius), a constant ~2.5-block arc spacing on every ring
+     * — so the outer ring keeps its validated 100 charges (2π×40.0 / 100 ≈
+     * 2.5) and inner rings stay sparse dotted circles instead of walls.
      */
-    public static final int[] RING_COUNTS = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
+    public static final int[] RING_COUNTS = {15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;
