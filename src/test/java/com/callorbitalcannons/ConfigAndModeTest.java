@@ -19,11 +19,11 @@ class ConfigAndModeTest {
         assertEquals(0L, data.playerCooldownTicks);
         assertEquals(4, data.maxActiveStrikes);
         assertEquals(700, data.nukePayloadLimit);
-        assertEquals(11, data.nukeRingCount);
+        assertEquals(10, data.nukeRingCount);
         assertEquals(72.0, data.nukeSpawnHeight, 1e-9);
         assertEquals(79, data.nukeFuseTicks);
-        assertEquals(1.0, data.nukeMisalignRange, 1e-9);
-        assertEquals(0.2, data.nukeAngularJitter, 1e-9);
+        assertEquals(0.5, data.nukeMisalignRange, 1e-9);
+        assertEquals(0.0, data.nukeAngularJitter, 1e-9);
         assertEquals(192, data.stabMaxSteps);
         assertEquals(1, data.stabTntPerStep);
         assertEquals(2, data.stabStepSize);
@@ -46,10 +46,10 @@ class ConfigAndModeTest {
         assertEquals(200.0, data.targetingRange, 1e-9);
         assertEquals(10, data.strikeDelayTicks);
         assertEquals(4, data.maxActiveStrikes);
-        assertEquals(11, data.nukeRingCount);
+        assertEquals(10, data.nukeRingCount);
         assertEquals(79, data.nukeFuseTicks);
         assertEquals(700, data.nukePayloadLimit);
-        assertEquals(0.2, data.nukeAngularJitter, 1e-9);
+        assertEquals(0.0, data.nukeAngularJitter, 1e-9);
         assertEquals(192, data.stabMaxSteps);
         assertEquals(1200.0f, data.blastResistanceStop, 1e-6f);
     }

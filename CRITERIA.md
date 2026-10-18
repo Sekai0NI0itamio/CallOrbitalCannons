@@ -1,5 +1,10 @@
 # Criteria: CallOrbitalCannons
 
+## 1.2.7 (staged formation restored: 669 TNT)
+
+- [ ] Nuke 669 TNT (1 stationary center + 10 rings, radii {6,11,…,51} step 5, counts {15,27,38,49,62,73,83,95,107,119}), flat 0.5 scatter, jitter default 0.0, ringCount 10 (clamp 1–10); config generation 4 → 5
+- [ ] CI green on 1.2.7 (run TBD); JAR 1.2.7 + sources downloaded to project folder
+
 ## 1.2.6 (cubicmetre-proportional rings: 636 TNT)
 
 - [x] Nuke 636 TNT (center + rings {15,24,32,41,49,58,66,75,83,92,100} ∝ radius at ~2.5-block arc spacing, radii 6.0..40.0 step 3.4), cap 700, ringCount 11; config generation 3 → 4

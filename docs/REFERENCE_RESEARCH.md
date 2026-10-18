@@ -238,3 +238,45 @@ above are arithmetic on those verbatim values
   a dozen-ish rings — none of them uniform 100-charge inner rings.
 - Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
   stop ≥ 1200).
+
+## 12. 1.2.7 — staged formation restored (reference verbatim: 669 TNT)
+
+- **Directive:** in-game feedback rejected the 1.2.6 look ("still looks
+  bad"); the ask was to find exactly what Wemmbu used for the staged
+  strikes and implement that staged cannon.
+- **What the staging was:** cubicmetre (the cannon's designer, credited
+  in Wemmbu's video) states the on-screen strikes were "a Skript script
+  I made, which simulates the payload builder" — visually "a ring of TNT
+  with one TNT in the middle drops down"; Wemmbu's video marks the
+  sequence "staged for story-telling purposes".
+- **Source-verified spec (upstream `OrbitalStrikeConfig` at 067fbcd,
+  re-read 2026-10-18):** `nukeRingCount = 10`, `ringRadii = {6, 11, 16,
+  21, 26, 31, 36, 41, 46, 51}`, `ringTntCounts = {15, 27, 38, 49, 62, 73,
+  83, 95, 107, 119}` (668 + 1 = 669; upstream's debug text still prints
+  a stale "661 tnt" and its README says 661 — see §3), `nukeMisalignRange
+  = 0.5` (one flat uniform disc per charge, sqrt distribution, then the
+  band clamp), `nukeSpawnHeight = 72`, `nukeFuseTicks = 79`; the center
+  charge is stationary; no angular jitter; every charge spawns from the
+  same point with drag-compensated outward velocity (scale =
+  (1 − 0.98^79) / 0.02 ≈ 39.9). 1.2.7 adopts this verbatim — the same
+  spec 1.0.0 first ported, returning after the 1.1–1.2 formation
+  experiments (2000 ragged carpet; 602/539 redistributions; 225; 1101
+  uniform; 636 proportional) all deviated from the staged look.
+- **Footprint cross-check:** community documentation of the staged
+  strikes ("100×100 destruction area", vUnstable plugin) fits the staged
+  radii exactly (max 51 → ~102-block span). A decompiled cross-check of
+  the "Unstable SMP Orbital Strike Cannon Plugin" (CurseForge project
+  1464360, file 7636427) shows a different, compact design — 10 rings of
+  radius 2.0..13.7 (step 1.3), counts 24..96 (step 8), spawn +50, a
+  ~28-block span — which does not match the staged footprint and was not
+  adopted. The CurseForge datapack recreation (file 8058764) stayed
+  unreachable (Cloudflare on the CDN and project page), so upstream
+  source remains the authoritative staged spec.
+- **Scatter model change:** the per-ring messiness ramp (0.1–0.2 of the
+  configured values, 1.2.2–1.2.6) is removed — upstream applies its 0.5
+  disc flat, so every ring carries the same width. `nukeAngularJitter`
+  default drops to 0.0 (upstream has no jitter term; the knob remains
+  for deliberately ragged carpets). `nukeRingCount` default 11 → 10
+  (clamp 1–10). Config generation stamp 4 → 5.
+- Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
+  stop ≥ 1200).

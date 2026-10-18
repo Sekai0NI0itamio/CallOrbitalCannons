@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.2.7 — staged formation restored: 669 TNT (was 636)
+
+- Nuke now reproduces the staged Unstable SMP formation verbatim, the one
+  cubicmetre's simulation dropped on screen ("a ring of TNT with one TNT
+  in the middle drops down"): 1 stationary center charge + 10 rings at
+  radii {6, 11, 16, 21, 26, 31, 36, 41, 46, 51} (uniform 5-block gaps)
+  with per-ring counts {15, 27, 38, 49, 62, 73, 83, 95, 107, 119} — 668
+  ring charges + 1 center = 669 TNT over a ~102-block footprint, matching
+  the staged strikes' ~100×100 destruction area.
+- Scatter follows the staged spec exactly: one flat 0.5-block disc of
+  misalignment per charge (uniform, sqrt distribution) plus the ring-band
+  clamp. The per-ring messiness ramp is gone and `nukeAngularJitter` now
+  defaults to 0.0 — every ring carries the same clean, evenly spaced
+  width, as upstream ships.
+- Source-verified against upstream `OrbitalStrikeConfig` at 067fbcd
+  (radii/counts/fuse/spawn height verbatim; the "661" in upstream's debug
+  text and README is stale — the arrays sum to 669). Supersedes the
+  1.1–1.2 formation experiments; see docs/REFERENCE_RESEARCH.md §12.
+- Defaults updated: `nukeRingCount` 11 → 10 (clamp 1–10),
+  `nukeMisalignRange` 1.0 → 0.5, `nukeAngularJitter` 0.2 → 0.0;
+  `nukePayloadLimit` stays 700 (above the 669 baseline); config
+  generation stamp 4 → 5, so stored 1.2.x configs are backed up +
+  regenerated on load.
+
 ## 1.2.6 — cubicmetre-proportional rings: 636 TNT (was 1101)
 
 - Nuke ring counts now follow cubicmetre's Mk.6 law — "the amount of TNT

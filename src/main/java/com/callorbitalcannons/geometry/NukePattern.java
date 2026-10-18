@@ -5,21 +5,20 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Nuke (Orbital) Shot geometry: one stationary center charge plus eleven
+ * Nuke (Orbital) Shot geometry: one stationary center charge plus ten
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.6 behavior, following cubicmetre's Mk.6 ring law — "the amount
- * of TNT we add to the ring is proportional to its radius" — so every ring
- * carries round(2.5 × radius) charges at a constant ~2.5-block arc spacing:
- * a 636-charge pattern over radii 6.0..40.0 — one center charge plus rings
- * of {15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100}. The 1.2.5 uniform
- * 100-per-ring count made inner rings solid walls and doubled the in-game
- * TNT ("tooo much tnt"); the proportional law reads every ring as a clean
- * dotted circle, sparsest toward the center, and halves the payload.
- * Angular jitter and scatter are scaled per ring and kept low (~80-95%
- * circular even on the outer fringe). Counts, jitter, and scatter are all
- * configurable; see docs/REFERENCE_RESEARCH.md §11 for provenance.
+ * <p>1.2.7 behavior: the source-verified staged formation — 1 stationary
+ * center charge and 10 rings at radii 6..51 (uniform 5-block gaps) with
+ * per-ring counts {15, 27, 38, 49, 62, 73, 83, 95, 107, 119}, so a strike
+ * uses 668 ring charges + 1 center = 669 TNT across a ~102-block footprint.
+ * This is the staged Unstable SMP payload drop (cubicmetre's Skript
+ * simulation) as shipped upstream (OrbitalStrikeConfig at 067fbcd): every
+ * charge gets one flat uniform scatter disc of 0.5 blocks — no per-ring
+ * ramp, no angular jitter by default — then a clamp into its ring band.
+ * Scatter, jitter, and ring count remain configurable; see
+ * docs/REFERENCE_RESEARCH.md §12 for provenance.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -28,17 +27,17 @@ public final class NukePattern {
     private NukePattern() {
     }
 
-    /** Ring radii in blocks, innermost first (uniform 3.4-block gaps). */
-    public static final double[] RING_RADII = {6.0, 9.4, 12.8, 16.2, 19.6, 23.0, 26.4, 29.8, 33.2, 36.6, 40.0};
+    /** Ring radii in blocks, innermost first (uniform 5-block gaps; the staged spec's 10 rings). */
+    public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
 
     /**
-     * Charges per ring. Sums to 635 ring charges; plus the center charge
-     * each strike uses 636 TNT. Counts follow the Mk.6 proportional law —
-     * round(2.5 × radius), a constant ~2.5-block arc spacing on every ring
-     * — so the outer ring keeps its validated 100 charges (2π×40.0 / 100 ≈
-     * 2.5) and inner rings stay sparse dotted circles instead of walls.
+     * Charges per ring (staged baseline, verbatim upstream). Sums to 668
+     * ring charges; plus the center charge each strike uses 669 TNT over a
+     * ~102-block footprint — the staged strikes' documented ~100×100
+     * destruction area. Counts grow smoothly outward, 15 to 119, holding a
+     * 2.5-2.7-block arc spacing on every ring.
      */
-    public static final int[] RING_COUNTS = {15, 24, 32, 41, 49, 58, 66, 75, 83, 92, 100};
+    public static final int[] RING_COUNTS = {15, 27, 38, 49, 62, 73, 83, 95, 107, 119};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;
@@ -49,15 +48,16 @@ public final class NukePattern {
     /** Per-tick horizontal velocity retention of a primed TNT entity. */
     public static final double DRAG = 0.98;
 
-    /** Default scatter-disc radius per charge, in blocks (applied fully to the outermost ring; scaled down for inner rings). */
-    public static final double MISALIGN_RANGE = 1.0;
+    /** Default scatter-disc radius per charge, in blocks (flat for every ring — the staged spec's 0.5). */
+    public static final double MISALIGN_RANGE = 0.5;
 
     /**
-     * Default angular jitter as a fraction of one charge spacing (applied fully to the outermost ring;
-     * scaled down for inner rings). Each charge's angle wanders up to ± this fraction of the even
-     * spacing, which breaks up the perfect-circle look.
+     * Default angular jitter as a fraction of one charge spacing (0.0 =
+     * none, the staged spec's even spacing). Each charge's angle wanders up
+     * to ± this fraction of the spacing; the knob remains for players who
+     * want a deliberately ragged carpet.
      */
-    public static final double ANGULAR_JITTER = 0.2;
+    public static final double ANGULAR_JITTER = 0.0;
 
     /** Placement of one ring charge relative to the target center. */
     public record Placement(double dx, double dz, double vx, double vz) {
@@ -112,9 +112,9 @@ public final class NukePattern {
     }
 
     /**
-     * Generates every ring placement for one strike: jittered angle around
-     * the even spacing, uniform-disc scatter, band clamp, then
-     * drag-compensated velocity toward the final offset.
+     * Generates every ring placement for one strike: flat angular jitter
+     * around the even spacing (zero by default), uniform-disc scatter, band
+     * clamp, then drag-compensated velocity toward the final offset.
      */
     public static List<Placement> generatePlacements(Random random, double[] radii, int[] counts,
                                                      double misalign, int fuseTicks, double angularJitter) {
@@ -122,20 +122,13 @@ public final class NukePattern {
         for (int i = 0; i < radii.length; i++) {
             double baseRadius = radii[i];
             int tntCount = counts[i];
-            // Rings stay mostly circular everywhere (~80-95%): a slight
-            // upward ramp toward the outer fringe keeps bands clean but
-            // not rigid, so even the last rings are just lightly scattered.
-            double ringProgress = radii.length == 1 ? 0.0 : (double) i / (radii.length - 1);
-            double messiness = 0.1 + 0.1 * ringProgress;
-            double ringJitter = angularJitter * messiness;
-            double ringMisalign = misalign * messiness;
             double spacing = (2.0 * Math.PI) / tntCount;
             for (int j = 0; j < tntCount; j++) {
-                double angle = spacing * j + (random.nextDouble() * 2.0 - 1.0) * ringJitter * spacing;
+                double angle = spacing * j + (random.nextDouble() * 2.0 - 1.0) * angularJitter * spacing;
 
-                // Circular randomness: uniform point in a disc of radius ringMisalign.
+                // Circular randomness: uniform point in a disc of radius misalign.
                 double offsetAngle = random.nextDouble() * 2.0 * Math.PI;
-                double offsetMag = Math.sqrt(random.nextDouble()) * ringMisalign;
+                double offsetMag = Math.sqrt(random.nextDouble()) * misalign;
 
                 double idealX = baseRadius * Math.cos(angle);
                 double idealZ = baseRadius * Math.sin(angle);
