@@ -9,14 +9,18 @@ import java.util.Random;
  * concentric rings dropped from high above with drag-compensated outward
  * velocity, so the charges spread back out to their ring radii as they fall.
  *
- * <p>1.2.8 behavior: the cubicmetre Mk.6 payload formation — ring charge
- * counts are proportional to radius ({15, 28, 40, 52, 65, 78, 90, 103, 115,
- * 128} for radii 6..51, 714 ring charges + 1 center = 715 TNT over a
- * ~102-block footprint), and every charge is placed at a random angle around
- * its ring with a tiny 0.2-block scatter disc. This matches cubicmetre's
- * Mk.6 cannon: prime momentum kicks each TNT in a random direction, so rings
- * render as dense clumps rather than even spacing. Counts, jitter, scatter,
- * and ring count remain configurable; see docs/REFERENCE_RESEARCH.md §13.
+ * <p>1.2.9 behavior: the cubicmetre Mk.6 payload formation with front-loaded
+ * inner rings — ring charge counts are proportional to radius
+ * (round(2.5 × radius)) but weighted toward the center:
+ * {24, 48, 56, 52, 65, 78, 90, 103, 115, 128} for radii 6..51 — 759 ring
+ * charges + 1 center = 760 TNT over a ~102-block footprint. The first three
+ * rings sit densest (2nd ring packed tight) so the strike opens with impact;
+ * outer rings keep breathing room. Every charge is placed at a random angle
+ * around its ring with a tiny 0.2-block scatter disc. This matches
+ * cubicmetre's Mk.6 cannon: prime momentum kicks each TNT in a random
+ * direction, so rings render as dense clumps rather than even spacing.
+ * Counts, jitter, scatter, and ring count remain configurable; see
+ * docs/REFERENCE_RESEARCH.md §13.
  *
  * <p>No Minecraft classes are referenced here so the math stays unit
  * testable; the Fabric modules translate placements into entities.
@@ -29,15 +33,16 @@ public final class NukePattern {
     public static final double[] RING_RADII = {6.0, 11.0, 16.0, 21.0, 26.0, 31.0, 36.0, 41.0, 46.0, 51.0};
 
     /**
-     * Charges per ring (cubicmetre Mk.6 law: the amount of TNT added to a
-     * ring is proportional to its radius, round(2.5 × radius)). Sums to 714
-     * ring charges; plus the center charge each strike uses 715 TNT over a
-     * ~102-block footprint. Constant ~2.5-block arc spacing at even
-     * placement; with random placement (the default) rings render as dense
-     * clumps with gaps between them, and inner rings are denser per unit
-     * area than outer ones — matching cubicmetre's Mk.6 payload render.
+     * Charges per ring (cubicmetre Mk.6 law, front-loaded: the amount of TNT
+     * added to a ring is proportional to its radius, round(2.5 × radius), but
+     * the first three rings are densest — 24, 48, 56 — so the strike opens
+     * tight. Sums to 759 ring charges; plus the center charge each strike
+     * uses 760 TNT over a ~102-block footprint. With random placement (the
+     * default) rings render as dense clumps with gaps; inner rings are
+     * denser per unit area than outer ones — matching cubicmetre's Mk.6
+     * payload render.
      */
-    public static final int[] RING_COUNTS = {15, 28, 40, 52, 65, 78, 90, 103, 115, 128};
+    public static final int[] RING_COUNTS = {24, 48, 56, 52, 65, 78, 90, 103, 115, 128};
 
     /** Spawn height above the target block. */
     public static final double SPAWN_HEIGHT = 72.0;

@@ -15,11 +15,11 @@ public final class OrbitalConfigData {
     /**
      * Config generation stamp. Bumped whenever defaults change meaning
      * (1.2.1 = generation 2, 1.2.5 = generation 3, 1.2.6 = generation 4,
-     * 1.2.7 = generation 5, 1.2.8 = generation 6); files without the stamp
-     * or from an older generation are backed up + regenerated on load
-     * instead of silently keeping stale gameplay values.
+     * 1.2.7 = generation 5, 1.2.8 = generation 6, 1.2.9 = generation 7);
+     * files without the stamp or from an older generation are backed up +
+     * regenerated on load instead of silently keeping stale gameplay values.
      */
-    public static final int CURRENT_CONFIG_VERSION = 6;
+    public static final int CURRENT_CONFIG_VERSION = 7;
 
     public int configVersion = CURRENT_CONFIG_VERSION;
     public double targetingRange = 200.0;

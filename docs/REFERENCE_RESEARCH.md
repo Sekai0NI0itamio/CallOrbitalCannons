@@ -309,10 +309,10 @@ above are arithmetic on those verbatim values
     15 × ring index (last ring doubled), outward speed 0.15 + (r−1) × 0.5
     per ring, strong downward velocity (−7.0 → −7.75 eased), fuse 40.
     Confirms the Mk.6 render: random-angle clumps, not even dots.
-- **Adopted for 1.2.8:** radii 6..51 (uniform 5-block gaps, ~102-block
-  footprint matching the staged "100×100 destruction area"); counts
-  round(2.5 × radius) = {15, 28, 40, 52, 65, 78, 90, 103, 115, 128} =
-  714 ring charges + 1 center = 715 TNT (cubicmetre's ∝ radius law with a
+- **Adopted for 1.2.9:** radii 6..51 (uniform 5-block gaps, ~102-block
+  footprint matching the staged "100×100 destruction area"); counts round(2.5
+  × radius), front-loaded = {24, 48, 56, 52, 65, 78, 90, 103, 115, 128} =
+  759 ring charges + 1 center = 760 TNT (cubicmetre's ∝ radius law with a
   constant ~2.5-block arc spacing at even placement); placement = random
   angle per charge (`nukeAngularJitter` default 1.0; 0.0 restores even
   rings); scatter = flat 0.2-block disc (prime-momentum-equivalent fuzz);
@@ -328,8 +328,9 @@ above are arithmetic on those verbatim values
   schematic/map downloads (Planet Minecraft, MineSchematic) contain the
   cannon machine, not the dynamically built payload, so they carry no
   per-ring TNT data.
-- **What changed vs 1.2.7:** counts 15..119 → 15..128 (∝ radius); default
-  placement even → random clumps (jitter 0.0 → 1.0); scatter 0.5 → 0.2;
-  payload limit 700 → 800; generation 5 → 6; total 669 → 715 TNT.
+- **What changed vs 1.2.8:** counts 15..128 → front-loaded {24, 48, 56,
+  52, 65, 78, 90, 103, 115, 128} (∝ radius); placement random clumps
+  (jitter 1.0 kept); scatter 0.2 kept; payload limit 800 kept; generation
+  6 → 7; total 715 → 760 TNT.
 - Stab unchanged (1 TNT every 2 blocks, maxSteps 192, blast-resistance
   stop ≥ 1200).

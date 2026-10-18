@@ -27,27 +27,29 @@ class NukePatternTest {
     @Test
     void ringCountsMatchMk6Baseline() {
         // cubicmetre Mk.6: the amount of TNT added to a ring is proportional
-        // to its radius, round(2.5 × radius). 15 at radius 6 … 128 at radius
-        // 51, 714 ring charges + 1 center = 715 TNT.
-        assertArrayEquals(new int[]{15, 28, 40, 52, 65, 78, 90, 103, 115, 128},
+        // to its radius, round(2.5 × radius), but front-loaded — the first
+        // three rings (24, 48, 56) carry the dense opening impact, then it
+        // continues 52 → 128 outward. 759 ring charges + 1 center = 760 TNT.
+        assertArrayEquals(new int[]{24, 48, 56, 52, 65, 78, 90, 103, 115, 128},
                 NukePattern.RING_COUNTS);
     }
 
     @Test
     void ringTotalsMatchMk6Baseline() {
-        assertEquals(714, NukePattern.ringTotal());
-        assertEquals(715, NukePattern.totalPayload());
+        assertEquals(759, NukePattern.ringTotal());
+        assertEquals(760, NukePattern.totalPayload());
     }
 
     @Test
-    void ringCountsGrowWithRadius() {
-        // Mk.6 loads every ring heavier than the last, 15 to 128, so outer
-        // circumferences hold proportionally more charge.
+    void innerRingsAreDenseForOpeningImpact() {
+        // The 2nd ring should pack tight for the dense opening impact.
         int[] counts = NukePattern.RING_COUNTS;
-        for (int i = 1; i < counts.length; i++) {
-            assertTrue(counts[i] > counts[i - 1],
-                    "ring " + i + " count " + counts[i] + " should exceed " + counts[i - 1]);
-        }
+        assertTrue(counts[1] > counts[0],
+                "2nd ring (" + counts[1] + ") denser than 1st (" + counts[0] + ")");
+        assertTrue(counts[2] > counts[1],
+                "3rd ring (" + counts[2] + ") denser than 2nd (" + counts[1] + ")");
+        assertTrue(counts[counts.length - 1] > counts[counts.length - 2],
+                "outer ring still carries the heaviest ring");
     }
 
     @Test

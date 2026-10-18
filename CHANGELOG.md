@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.9 — denser inner rings: 760 TNT (was 715)
+
+- Nuke's inner rings are now front-loaded for a denser opening impact: counts {24, 48, 56, 52, 65, 78, 90, 103, 115, 128} — 759 ring charges + 1 center = 760 TNT over the same ~102-block footprint. Random-angle clumpy placement (`nukeAngularJitter` 1.0) and the 0.2-block scatter disc are unchanged; `nukePayloadLimit` stays 800.
+
 ## 1.2.8 — cubicmetre Mk.6 payload formation: 715 TNT (was 669)
 
 - Nuke now uses cubicmetre's Mk.6 payload formation instead of the staged
